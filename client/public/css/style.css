@@ -1,0 +1,72 @@
+.navbar{
+    min-height: 5rem;
+    max-height: 30rem;
+}
+.cardCourse{
+    color: #000;
+    width: 300;
+    max-height: 340px;
+}
+.cardbox{
+    width: 300px;
+    margin: .5rem;
+}
+/* 
+.cardCourse .homeimagediv{
+    height: 270px;
+    background: rgb(255, 255, 255);
+} */
+
+a{
+    text-decoration: none !important;
+}
+
+.smalltext{
+    font-size: 14px;
+}
+
+.cardCourse .homeimage{
+    width: 290px;
+    min-height: 185px;
+    max-height: 195px;
+}
+
+
+.addcard{
+    width: 330px;
+    height: 290px;
+    background: rgb(243, 243, 243);
+    text-align: center;
+}
+
+.addcard p{
+    font-size: 10rem;
+    text-decoration: none;
+    color: rgb(75, 182, 42);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (min-width: 768px){
+.cardsInCourse {
+    flex: 0 0 22%;
+    margin: 0.5rem;
+    /* max-width: 25%; */
+}
+
+}

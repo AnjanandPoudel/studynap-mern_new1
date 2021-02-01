@@ -1,0 +1,23 @@
+.navbarflex{
+    display: flex;
+    justify-content: space-around;
+    margin: 0 0rem 0 35%;
+}
+.bold{
+    font-weight: bolder;
+    margin: 0.5rem 1rem -0.5rem 1rem;
+}
+
+.red{
+    color: red;
+}
+
+.green{
+    color: green;
+}
+
+h1{
+    position: relative;
+    margin: 3rem;
+
+}
