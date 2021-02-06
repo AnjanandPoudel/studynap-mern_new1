@@ -1,3 +1,59 @@
+
+
+.hel{
+    font-size: 1.3rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+a{
+    text-decoration: none !important;
+}
+.smalltext{
+    font-size: 14px;
+}
+.medtext{
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.yellow{
+    color: rgb(220, 154, 11) !important;
+}
+.blue{
+    color: blue;
+}
+
+.boxy{
+    border: 1px solid rgb(135, 120, 120);
+    background: rgb(241, 238, 238);
+    border-radius:2px ;
+    padding: 0.3rem;
+    cursor: pointer;
+}
+span i .boxy:focus{
+    border: 1px solid gray;
+    background: rgb(170, 166, 166);
+}
+
+i:hover{
+    cursor: pointer;
+}
+
+#likeCourse{
+    font-size: 1.5rem;
+    margin: 0.2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
 .navbar{
     min-height: 5rem;
     max-height: 30rem;
@@ -17,13 +73,7 @@
     background: rgb(255, 255, 255);
 } */
 
-a{
-    text-decoration: none !important;
-}
 
-.smalltext{
-    font-size: 14px;
-}
 
 .cardCourse .homeimage{
     width: 290px;
