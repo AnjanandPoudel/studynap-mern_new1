@@ -3,42 +3,45 @@ import Header from './headerComponent'
 import Home from './homeComponent';
 import Courses from './courseComponents';
 import Footer from './footerComponent'
-import {Redirect,Route, Switch} from 'react-router-dom'
+import {Redirect,Route, Switch,withRouter} from 'react-router-dom'
 import AddCourse from './addCourseComponent';
 import Contact from './contactComponent';
 
 
 
-
-import {COURSES} from '../shared/courses'
-import {COMMENTS} from '../shared/comments'
 import CourseDetail from './courseDetailComponent';
 
+import {connect} from 'react-redux'
+
+
+const mapStatetoProps= state=>{
+  return{
+    courses:state.red_courses,
+    comments:state.red_comments
+  }
+}
 
 
 class Main extends Component{
     constructor(props) {
         super(props);
         this.state={
-          courses:COURSES,
-          selectedCourseId:null,
-          comments:COMMENTS
         }
       
       }
 
-      
+/*       
     onCourseClick(itemId){
       this.setState({selectedCourseId:itemId})
   }
-
+ */
     
       render() {
-        console.log(this.state.courses)
+        console.log(this.props.courses)
 
         const HomePage=()=>{
           return(
-            <Home  courses={this.state.courses} />
+            <Home  courses={this.props.courses} />
           )
         }
 
@@ -56,8 +59,8 @@ class Main extends Component{
         }
         const courseDetailComp=({match})=>{
           return(
-            <CourseDetail course={this.state.courses.filter(item => item.id=== parseInt(match.params.courseId,10) )[0] }
-            comments={this.state.comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
+            <CourseDetail course={this.props.courses.filter(item => item.id=== parseInt(match.params.courseId,10) )[0] }
+            comments={this.props.comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
           />
           )
         }
@@ -65,10 +68,10 @@ class Main extends Component{
         const courseComp=()=>{
           return(
             <div className="">
-              <CourseDetail course={this.state.courses.filter(item => item.id=== this.state.selectedCourseId )[0] }
-                comments={this.state.comments.filter(item=> item.id === this.state.selectedCourseId )[0]}
-              />
-              <Courses courses={this.state.courses} onClick={(courseId)=>this.onCourseClick(courseId)} />
+             {/*  <CourseDetail course={this.props.courses.filter(item => item.id=== this.state.selectedCourseId )[0] }
+                comments={this.props.comments.filter(item=> item.id === this.state.selectedCourseId )[0]}
+              /> */}
+              <Courses courses={this.props.courses} /* onClick={(courseId)=>this.onCourseClick(courseId)} */ />
 
             </div>
 
@@ -104,4 +107,4 @@ class Main extends Component{
       }
 }
 
-export default Main
+export default withRouter(connect(mapStatetoProps)(Main)) // connecting class Main and mapStatetoProps
