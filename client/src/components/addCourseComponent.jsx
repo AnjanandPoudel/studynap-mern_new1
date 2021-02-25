@@ -5,44 +5,56 @@ import Header from './headerComponent';
 
 class AddCourse extends Component{
 
- constructor(){
+ constructor(props){
     super()
     this.state={
-      selected:null
+      selectedfile:null,
+      name:'',
+      email:'',
+      subject:'',
+      description:''
+
     }
     this.handleChange=this.handleChange.bind(this);
-    this.handleSubmit=this.handleSubmit.bind(this);
+    this.handleChangeinput=this.handleChangeinput.bind(this);
   }
 
 
   handleChange(event){
     this.setState({
-      selected:event.target.files[0]
+      selectedfile:event.target.files[0]
     })
-    console.log(this.state.selected);
+    console.log(this.state.selectedfile);
   }
 
-  handleSubmit(event){
-    event.preventDefault();
-    console.log(this.state.selected);
-    console.log(this.state)
+  handleChangeinput(event){
+    let target=event.target;
+    let name=target.name;
+    let value=target.type ==="checkbox" ? target.checked :target.value  ;
 
-    const formdata=new FormData();
+    this.setState({
+      [name]:value
+    })
+
+
+
+/*     const formdata=new FormData();
     formdata.append('inputfield',this.state)
 
   //   fetch('http://localhost:3001/courses',{
    // method:'POST',
   //  body:formdata
   //})
-  
- 
-
     axios.post("api/uploadfile", formdata); 
+    console.log(formdata) */
+  }
 
-    console.log(formdata)
 
+  handleSubmit=(event)=>{
     
-
+    alert( JSON.stringify(this.state))
+    this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.descp)
+    
   }
 /* 
   id: 1,
@@ -64,30 +76,30 @@ class AddCourse extends Component{
 
     return (
       <div className="App container mt-5">
-        <form className="form" action="/courses" encType="multipart/form-data" onSubmit={this.handleSubmit} >
+        <form className="form" action="/courses" encType="multipart/form-data" onSubmit={(values)=>this.handleSubmit(values)} >
             <div className="form-group">
               <label className="control-label col-sm-2" htmlFor="name">Name:</label>
               <div className="col-sm-10 col-md-5">
-                <input type="text" className="form-control" placeholder="name of course" name="name" id="name"  />
+                <input type="text" className="form-control" placeholder="name of course" name="name" id="name" value={this.state.name} onChange={this.handleChangeinput}  />
               </div>
             </div>
             <div className="form-group">
               <label className="control-label col-sm-2" htmlFor="name">Email:</label>
               <div className="col-sm-10 col-md-5">
-                <input type="email" className="form-control" placeholder="example@email.com" name="email" id="email"  />
+                <input type="email" className="form-control" placeholder="example@email.com" name="email" id="email" value={this.state.email}  onChange={this.handleChangeinput} />
               </div>
             </div>
             <div className="form-group sub">
               <label className="control-label col-sm-2" htmlFor="name">Subject:</label>
               <div className="col-sm-10  col-md-5">
-                <input type="text" className="form-control" placeholder="name of course" name="name" id="name"  />
+                <input type="text" className="form-control" placeholder="name of course" name="subject" id="subject" value={this.state.subject} onChange={this.handleChangeinput}   />
               </div>
   
             </div>
             <div className="form-group">
               <label className="control-label col-sm-2" htmlFor="description">Description:</label>
               <div className="col-sm-10 ">
-                <textarea rows="4" className="form-control" placeholder="description" name="description" id="description"  />
+                <textarea rows="4" className="form-control" placeholder="description" name="description" id="description"  value={this.state.description} onChange={this.handleChangeinput}   />
               </div>
             </div>
           
@@ -111,9 +123,8 @@ class AddCourse extends Component{
               </div>
             </div>
       
-          <button  type="submit" className=" btn btn-success " >Submit</button>
+          <button  type="submit" className=" btn btn-success ">Submit</button>
         </form>
-        
       </div>
     );
   }

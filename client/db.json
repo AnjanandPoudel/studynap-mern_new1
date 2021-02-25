@@ -1,0 +1,40 @@
+{"COURSES" :
+    [
+        {
+            "id": 0,
+            "name":"Math Course",
+            "image":" /assets/back.jpg",
+            "subject":"Maths",
+            "grade":"10",
+            "category": "Science",
+            "label":"HOt",
+            "price":4.99,
+            "featured": true,
+            "description":"This is course hosted by mr. Anjan Poudel. He is teaching maths in this course   "               
+        },
+        {
+            "id": 0,
+            "name":"Math Course",
+            "image":" /assets/back.jpg",
+            "subject":"Maths",
+            "grade":"10",
+            "category": "Science",
+            "label":"HOt",
+            "price":4.99,
+            "featured": true,
+            "description":"This is course hosted by mr. Anjan Poudel. He is teaching maths in this course   "               
+        },
+        {
+            "id": 0,
+            "name":"Math Course",
+            "image":" /assets/back.jpg",
+            "subject":"Maths",
+            "grade":"10",
+            "category": "Science",
+            "label":"HOt",
+            "price":4.99,
+            "featured": true,
+            "description":"This is course hosted by mr. Anjan Poudel. He is teaching maths in this course   "               
+        }
+    ]
+}

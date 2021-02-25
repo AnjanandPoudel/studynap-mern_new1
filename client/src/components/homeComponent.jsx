@@ -55,6 +55,8 @@ axios.post("api/uploadfile", formdata);
     );
   } */
 
+import { Loading } from "./Loading"
+
 
 /* 
 
@@ -115,37 +117,68 @@ function Videocard(props){
 
 
 function Home(props){
-  let course=props.courses.map(item=>{
-    return(
-      <div key={item.id} className="cardbox" >
-        <Videocard item={item} />
-      </div>
-    )
-  })
 
-    return(
-        <div className="">
 
-  <div className="container-fluid pt-5 bg-course">
-        <div className="m-3 moto">
-            <h4>Lorem, ipsum dolor.</h4>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto minus accusantia mollitia maxime quasi reprehenderit obcaecati eum.</p>
+  return(
+    <div className="">
+
+<div className="container-fluid pt-5 bg-course">
+    <div className="m-3 moto">
+        <h4>Lorem, ipsum dolor.</h4>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto minus accusantia mollitia maxime quasi reprehenderit obcaecati eum.</p>
+    </div>
+    <div className="row">
+        <div className="bg-course col-9 ">
+          <h5 className="bold">Course Packages:</h5>
+          <hr className="homehr"/>
+            <RenderHomeCourse Loading_courses={props.Loading_courses} errmsg={props.errmsg} courses={props.courses} />
         </div>
-        <div className="row">
-            <div className="bg-course col-9 ">
-              <h5 className="bold">Course Packages:</h5>
-              <hr className="homehr"/>
-              <div className="cards  d-flex flex-wrap">
-                {course}
-              </div>       
-            </div>
-            <div className="sidebar p-3 col-3 ">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur fugiat libero necessitatibus esse, optio porro velit dicta voluptas sed dolores!
-            </div>
+        <div className="sidebar p-3 col-3 ">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur fugiat libero necessitatibus esse, optio porro velit dicta voluptas sed dolores!
         </div>
-    </div> 
-        </div>
-    )
+    </div>
+</div> 
+    </div>
+)
+  
 }
 
+
+function RenderHomeCourse(props){
+  
+  if(props.Loading_courses){
+    return(
+      <div className="">
+        <Loading />
+      </div>
+    )
+  }
+  else if(props.errmsg){
+    return(
+      <div className="text-center">
+        <h2>{props.errmsg} </h2>
+      </div>
+    )
+  }
+  else if(props.courses){
+    let course=props.courses.map(item=>{
+      return(
+        <div key={item.id} className="cardbox" >
+          <Videocard item={item} />
+        </div>
+      )
+    })
+  return(
+    <div className="cards d-flex flex-wrap">
+      {course}
+    </div>
+    ) 
+  }
+
+  else{
+    return(
+      <div className=""></div>
+    )
+  }
+}
 export default Home

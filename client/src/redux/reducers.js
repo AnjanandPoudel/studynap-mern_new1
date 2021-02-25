@@ -8,6 +8,8 @@ export const initialState={
     red_comments:COMMENTS
 }
 
-export const Reducer=(state=initialState,action)=>{
+export const Reducer=(state={ red_courses:COURSES,
+    red_comments:COMMENTS},action)=>{
+
     return state;
 }

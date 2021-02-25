@@ -7,11 +7,10 @@ import {Redirect,Route, Switch,withRouter} from 'react-router-dom'
 import AddCourse from './addCourseComponent';
 import Contact from './contactComponent';
 
-
-
 import CourseDetail from './courseDetailComponent';
 
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
+import {add_comment,add_course,fetchCourses } from '../redux/ActionCreators';
 
 
 const mapStatetoProps= state=>{
@@ -21,13 +20,22 @@ const mapStatetoProps= state=>{
   }
 }
 
+const mapDispatchtoProps=(dispatchIt)=>({
+  props_addComment:(courseId,rating,comment,author)=>{
+    dispatchIt(add_comment(courseId,rating,comment,author))
+  },
+  props_addCourses:(name,email,subject,descp)=>{
+    dispatchIt(add_course(name,email,subject,descp))
+  },
+  fetchCourses:()=>{dispatchIt(fetchCourses())}
+})
+
 
 class Main extends Component{
     constructor(props) {
         super(props);
         this.state={
         }
-      
       }
 
 /*       
@@ -35,13 +43,16 @@ class Main extends Component{
       this.setState({selectedCourseId:itemId})
   }
  */
+      componentDidMount(){
+        this.props.fetchCourses()
+      }
     
       render() {
-        console.log(this.props.courses)
+        console.log(this.props.courses.courses)
 
         const HomePage=()=>{
           return(
-            <Home  courses={this.props.courses} />
+            <Home  courses={this.props.courses.courses} Loading_courses={this.props.courses.isLoading} errmsg={this.props.courses.errmsg} />
           )
         }
 
@@ -53,14 +64,17 @@ class Main extends Component{
         }
         const AddCourseComp=()=>{
           return(
-            <AddCourse />
+            <AddCourse  />
 
           )
         }
         const courseDetailComp=({match})=>{
           return(
-            <CourseDetail course={this.props.courses.filter(item => item.id=== parseInt(match.params.courseId,10) )[0] }
-            comments={this.props.comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
+            <CourseDetail course={this.props.courses.courses.filter(item => item.id=== parseInt(match.params.courseId,10) )[0] }
+                          comments={this.props.comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
+                          add_comments={this.props.props_addComment}
+                          Loading_courses={this.props.courses.isLoading} 
+                          errmsg={this.props.courses.errmsg}
           />
           )
         }
@@ -71,7 +85,15 @@ class Main extends Component{
              {/*  <CourseDetail course={this.props.courses.filter(item => item.id=== this.state.selectedCourseId )[0] }
                 comments={this.props.comments.filter(item=> item.id === this.state.selectedCourseId )[0]}
               /> */}
-              <Courses courses={this.props.courses} /* onClick={(courseId)=>this.onCourseClick(courseId)} */ />
+              <Courses courses={this.props.courses.courses} 
+              add_courses={this.props.props_addCourses}
+              Loading_courses={this.props.courses.isLoading}
+              errmsg={this.props.courses.errmsg}
+            
+
+              
+              /* onClick={(courseId)=>this.onCourseClick(courseId)} */ />
+
 
             </div>
 
@@ -107,4 +129,4 @@ class Main extends Component{
       }
 }
 
-export default withRouter(connect(mapStatetoProps)(Main)) // connecting class Main and mapStatetoProps
+export default withRouter(connect(mapStatetoProps,mapDispatchtoProps)(Main)) // connecting class Main and mapStatetoProps

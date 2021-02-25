@@ -21,3 +21,14 @@ h1{
     margin: 3rem;
 
 }
+
+.footer{
+    text-align: center;
+    background: rgb(162, 162, 162);
+    padding: 2rem 0 1rem 0;
+    margin: 2rem 0 0 0;
+}
+.footer a,p{
+    color: #000;
+}
+
