@@ -2,6 +2,7 @@ import {Button, Form, Input} from 'reactstrap'
 import React, { Component } from 'react';
 import { add_comments } from '../redux/ActionCreators';
 import { Loading } from './Loading';
+import { baseurl } from '../redux/baseURL';
 
 
 
@@ -46,36 +47,17 @@ class CourseDetail extends Component{
    
     render(){
         console.log(this.state.onecourse)
-        if(this.props.Loading_courses){
-            return(
-                <div className="">
-                    <Loading />
-                </div>
-            )
-        }
-        else if(this.props.errmsg){
-            return(
-                <div className="">
-                    {this.props.errmsg}
-                </div>
-            )
-        }
-        else if(this.state.onecourse){
+
+        if(true){
             return(
             <div className="d-flex flex-wrap m-1">
                 {/* props is supplied from main */}
-                <CoursekoDetail course={this.state.onecourse} onClick={this.likehandleClick}  />
-                <Comment courseId={this.props.course.id} comments={this.props.comments} add_comments={this.props.add_comments} author="anjan" />
+                <CoursekoDetail course={this.state.onecourse} onClick={this.likehandleClick} errmsg={this.props.errmsg} Loading_courses={this.props.Loading_courses}  />
+                <Comment course={this.props.course} comments={this.props.comments} add_comments={this.props.add_comments} author="anjan" failed_comments={this.props.failed_comments} Loading_comments={this.props.Loading_courses} />
             </div>
             )
         }
-        else{
-            return(
-                <div className="">
-                    error at coursedetail 75
-                </div>
-            )
-        }
+
         
         
     }
@@ -83,12 +65,35 @@ class CourseDetail extends Component{
 
 
 function CoursekoDetail(props){
+
+    if(props.Loading_courses){
+        return(
+            <div className="m-5 col-5 p-5">
+                <Loading />
+            </div>
+        )
+    }
+    else if(props.errmsg){
+        return(
+            <div className=" container m-5">
+                {props.errmsg}
+                <div className=" d-flex flex-wrap">
+                        <div className="card col -3 failed_to_fetch" width="40">
+                            failed to fetch
+                        </div>
+                        <div className="card card col -3 failed_to_fetch">
+                            failed to fetch
+                        </div>
+                    </div> 
+            </div>
+        )
+    }
     
-    if(props.course){
+    else if(props.course){
         return(
             <div  className="card m-1 cardCourse col-sm-12 col-md-6 col-lg-4">
                 <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={props.course.image} alt="pic"/>
+                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={parseInt(props.course.image.length,10)<50 ? baseurl+props.course.image : props.course.image} alt="pic"/>
                 </div>
                 <div className="cardContents d-flex justify-content-between">
                 <span className="smalltext">{props.course.grade} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue boxy" id="likeCourse"></i> </span>
@@ -102,9 +107,20 @@ function CoursekoDetail(props){
             </div>
         )
     }
-    else if (!props.course){
+    else{
         return(
-            <div className="">no course detail</div>
+            <div className=" container m-5">
+            <div className=" d-flex flex-wrap">
+                    <div className="card col -3 failed_to_fetch" width="40">
+                        Sorry 
+                        <h2>This is anjan poudel from headquater, i can't find the error/Course</h2>
+                    </div>
+                    <div className="card card col -3 failed_to_fetch">
+                        Sorry
+                        <h2>This is anjan poudel from headquater, i can't find the error/Course</h2>
+                    </div>
+                </div> 
+        </div>
         )
     }
 }
@@ -112,7 +128,23 @@ function CoursekoDetail(props){
 
 function Comment(props){
     console.log(props)
-    if(props.comments){
+
+    if(props.Loading_comments){
+        return(
+            <div className="text center p-5 col-5 m-5">
+                <Loading />
+            </div>
+        )
+    }
+    else if(props.failed_comments){
+        return(
+            <div className="text-center">
+                <h2>{props.failed_comments}</h2>
+            </div>
+        )
+    }
+
+    else if(props.comments){
         let commentarr=props.comments.map(item=>{
             return(
                 <div className="" key={item.id}>
@@ -130,11 +162,19 @@ function Comment(props){
                 </div>
             )
         })
+        if(!props.course){
+            return(
+                <div className="">
+                    NO course id
+                </div>
+            )
+        }
         return(
             <div  className=" col-sm-12 col-md-6 col-lg-6">
                 <h4>Comments : </h4>
                 {commentarr}
-                <CommentForm  author={props.author} add_comments={props.add_comments} courseId={props.courseId} />
+                
+                <CommentForm  author={props.author} add_comments={props.add_comments} courseId={props.course.id} />
             </div>
         )
     }
@@ -145,20 +185,16 @@ function Comment(props){
     }
 }
 
-
-
 class CommentForm extends Component{
     constructor(props){
         super()
         this.state={
             comment:'',
             author:props.author,
-            date:'2023 /12/2',
-            rate:0
+            rate:''
         }
     }
     handleChange=(event)=>{
-        console.log(event.target)
         const target=event.target;
         const name=target.name;
         const value=target.type === "checkbox" ? target.checkbox : target.value;
@@ -168,8 +204,6 @@ class CommentForm extends Component{
     }
     handleClick=(event)=>{
         event.preventDefault();
-        console.log(this.props);
-        alert(JSON.stringify(this.state))
         this.props.add_comments(this.props.courseId,this.state.rate,this.state.comment,this.state.author);
     }
     render(){
@@ -180,12 +214,11 @@ class CommentForm extends Component{
                     <Input className="form-control" type="textarea" row={4} placeholder="Add Comments here"  name="comment" value={this.state.comment} onChange={this.handleChange}  />
                     <Input type="number" name="rate" id="rate" onChange={this.handleChange} max="10"  placeholder="Rate from 1 to 10 stars"  value={this.state.rate}   />
 
-                    <Button type="submit">  Submit</Button>
+                    <Button type="submit" className="btn btn-secondary">  Submit</Button>
                     </div>
                 </Form>
             </div>
         )
     }
-}
-  
+} 
 export default CourseDetail;

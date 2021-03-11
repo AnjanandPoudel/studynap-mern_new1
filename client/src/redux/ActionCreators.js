@@ -1,54 +1,137 @@
 import * as ActionType from './ActionTypes';
-import { COURSES } from "../shared/courses";
+import { baseurl } from './baseURL';
+import axios from 'axios';
 
-export const add_comment=( c,r,comment,author )=>({
+export const add_comment=(comment )=>({
     type:ActionType.ADD_COMMENT,
-    payload:{
+    payload:comment
+    // now send it to store via Comments_reducers
+})
+
+
+export const postComments=( c,r,comment,author )=>(dispatch)=>{
+    let ourdata={
         courseId:c,
         rating:r,
         comment:comment,
         author:author
     }
-    // now send it to store
-})
+    ourdata.date=new Date().toISOString();
+/*     return axios.post(baseurl+'courses',ourdata)
+ */
+    return axios({
+        method: 'post',
+        url:baseurl+ 'comments',
+        data:ourdata
+      })
+    .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
+    .then(res=>dispatch(add_comment(res)))
+    .catch(error=>{ console.log('Error  posting comments', error);
+        alert('Error posting comments: This may be an error from server ::::::::: '+error);
+    })
+}
 
-export const add_course=(name,email,subject,descp)=>({
-    type:ActionType.ADD_COURSES,
-    payload:{
+export const postCourses=(name,email,subject,descp,selectedfile)=>(dispatch)=>{
+    let ourdata={
         name:name,
         email:email,
         subject:subject,
         description:descp,
+        image:selectedfile
     }
+    ourdata.date=new Date().toISOString();
+/*     return axios.post(baseurl+'courses',ourdata)
+ */
+    return axios({
+        method: 'post',
+        url:baseurl+ 'COURSES',
+        data:ourdata
+      })
+    .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
+    .then(res=>dispatch(add_course(res)))
+    .catch(error=>{ console.log('Error  posting courses', error);
+        alert('Error posting courses: This may be an error from server ::::::::: '+error);
+    })
+}
+export const add_course=(course)=>({
+    type:ActionType.ADD_COURSES,
+    payload:course
 })
+
+
+
+
+/* 
+
+.then(response => {
+    if (response.ok) {
+      return response;
+    } else {
+      var error = new Error('Error ' + response.status + ': ' + response.statusText);
+      error.response = response;
+      throw error;
+    }
+  },
+  error => {
+        throw error;
+  })
+.then(response => response.json())
+.then(response => dispatch(addComment(response)))
+.catch(error =>  { console.log('post comments', error.message); alert('Your comment could not be posted\nError: '+error.message); });
+};
+
+
+ */
+
+
+
 
 export const fetchCourses=()=>(dispatch)=>{
-    dispatch(loading_courses());
+    dispatch(loading_courses(true));
+    return axios.get(baseurl+'COURSES')
+    .then(res=>res.data)
+    .then(res=>(dispatch(show_courses(res))))
+    .catch(err=>{dispatch(failed_courses(err.message))})
+}
+export const loading_courses=()=>({
+    type:ActionType.LOADING_COURSES
+})
+export const failed_courses=(e)=>({
+    type:ActionType.FAILED_COURSES,
+    payload:e
+})
+export const show_courses=(c)=>({
+    type:ActionType.SHOW_COURSES,
+    payload:c
+})
+
+
+// comments
+/* export const fetchcomments=()=>(dispatch)=>{
+    dispatch(loading_comments(true));
     
     setTimeout(()=>{
-        dispatch(show_courses(COURSES));
-    },1000);
+        dispatch(show_comments(COMMENTS));
+    },1000)
 }
-
-export const loading_courses=(courses)=>({
-    type:ActionType.LOADING_COURSES,
+ */
+export const fetchcomments=()=>(dispatch)=>{
+    dispatch(loading_comments(true));
+    return axios.get(baseurl+'comments')
+    .then(res=>res.data)
+    .then(res=> dispatch(show_comments(res)) )
+    .catch(err=>{dispatch(failed_comments(err.message))})
+}
+export const loading_comments=()=>({
+    type:ActionType.LOADING_COMMENTS,
+})
+export const failed_comments=(err)=>({
+    type:ActionType.FAILED_COMMENTS,
+    payload:err
+})
+export const show_comments=(courses)=>({
+    type:ActionType.SHOW_COMMENTS,
     payload:courses
 })
-export const failed_courses=(courses)=>({
-    type:ActionType.FAILED_COURSES,
-    payload:courses
-})
-export const show_courses=(courses)=>({
-    type:ActionType.SHOW_COURSES,
-    payload:courses
-})
-
-
-
-
-
-
-
-
 
 

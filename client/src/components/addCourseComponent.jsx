@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
 import Header from './headerComponent';
+import { post } from 'axios';
 
 class AddCourse extends Component{
 
@@ -70,10 +71,33 @@ class AddCourse extends Component{
   likes:34,
   rating:5 
  */
+
+  handleSubmit = (data) => {
+        let formData = new FormData();
+        formData.append('name', data.name)
+        formData.append('videoname', data.videoname[0])
+        formData.append('email',data.email)
+        formData.append('subject',data.subject)
+        formData.append('description',data.description)
+
+        console.log(formData)
+
+       /*  const config = {
+            headers: { 'content-type': 'multipart/form-data' }
+        }
+        const url = 'http://example.com/fileupload/';
+        post(url, formData, config)
+            .then(function(response) {
+                console.log(response);
+            })
+            .catch(function(error) {
+                console.log(error);
+            }); */
+}
+    
+
   
   render(){
- 
-
     return (
       <div className="App container mt-5">
         <form className="form" action="/courses" encType="multipart/form-data" onSubmit={(values)=>this.handleSubmit(values)} >

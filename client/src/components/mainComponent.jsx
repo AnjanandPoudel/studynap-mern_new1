@@ -10,7 +10,7 @@ import Contact from './contactComponent';
 import CourseDetail from './courseDetailComponent';
 
 import {connect} from 'react-redux';
-import {add_comment,add_course,fetchCourses } from '../redux/ActionCreators';
+import {postComments,postCourses,fetchCourses,fetchcomments } from '../redux/ActionCreators';
 
 
 const mapStatetoProps= state=>{
@@ -22,12 +22,13 @@ const mapStatetoProps= state=>{
 
 const mapDispatchtoProps=(dispatchIt)=>({
   props_addComment:(courseId,rating,comment,author)=>{
-    dispatchIt(add_comment(courseId,rating,comment,author))
+    dispatchIt(postComments(courseId,rating,comment,author))
   },
-  props_addCourses:(name,email,subject,descp)=>{
-    dispatchIt(add_course(name,email,subject,descp))
+  props_addCourses:(name,email,subject,descp,selectedfile)=>{
+    dispatchIt(postCourses(name,email,subject,descp,selectedfile))
   },
-  fetchCourses:()=>{dispatchIt(fetchCourses())}
+  fetchCourses:()=>{dispatchIt(fetchCourses())},
+  fetchcomments:()=>{dispatchIt(fetchcomments())}
 })
 
 
@@ -45,14 +46,17 @@ class Main extends Component{
  */
       componentDidMount(){
         this.props.fetchCourses()
+        this.props.fetchcomments()
       }
     
       render() {
-        console.log(this.props.courses.courses)
+        console.log(this.props.courses)
 
         const HomePage=()=>{
           return(
-            <Home  courses={this.props.courses.courses} Loading_courses={this.props.courses.isLoading} errmsg={this.props.courses.errmsg} />
+            <Home  courses={this.props.courses.courses}
+             Loading_courses={this.props.courses.isLoading}
+              errmsg={this.props.courses.errmsg} />
           )
         }
 
@@ -69,12 +73,16 @@ class Main extends Component{
           )
         }
         const courseDetailComp=({match})=>{
+          console.log(this.props.comments.show_comments)
+          console.log("This is where i find most of those things")
           return(
-            <CourseDetail course={this.props.courses.courses.filter(item => item.id=== parseInt(match.params.courseId,10) )[0] }
-                          comments={this.props.comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
+            <CourseDetail course={this.props.courses.courses.filter(item => item.id === parseInt(match.params.courseId,10) )[0] }
+                          comments={this.props.comments.show_comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
                           add_comments={this.props.props_addComment}
                           Loading_courses={this.props.courses.isLoading} 
                           errmsg={this.props.courses.errmsg}
+                          loading_comments={this.props.comments.loading_comments} 
+                          failed_comments={this.props.comments.failed_comments}
           />
           )
         }
@@ -89,27 +97,13 @@ class Main extends Component{
               add_courses={this.props.props_addCourses}
               Loading_courses={this.props.courses.isLoading}
               errmsg={this.props.courses.errmsg}
-            
-
-              
               /* onClick={(courseId)=>this.onCourseClick(courseId)} */ />
-
-
             </div>
-
           )
         }
 
-
-
         return (
-         /*  <form onSubmit={this.handleSubmit}>
-            <label>
-              Name of the king:
-              <input type="text" placeholder="type in small letters" value={this.state.value} onChange={this.handleChange} />
-            </label>
-            <input type="submit" value="Submit" />
-          </form> */
+        
           <div className="">
            <Header />
           

@@ -1,17 +1,11 @@
 
 import * as ActionType from './ActionTypes';
-
-
-
 /* 
 You can also write state={red_comments:COMMENTS} but you will have to write only this in createStore ;
     combineReducers{ 
         Courses // exported from the Reducers
     }
  */
-
-
-
 export const Courses=(state={
     isLoading:true,
     errmsg:null,
@@ -26,7 +20,6 @@ export const Courses=(state={
             return{...state,isLoading:false,errmsg:action.payload,courses:[]}
         case ActionType.ADD_COURSES:
             let course=action.payload;
-            course.id=state.length;
             course.grade=5;
             course.price=2;
             return {...state,courses:state.courses.concat(course)}

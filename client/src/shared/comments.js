@@ -7,7 +7,7 @@ export const COMMENTS =
         rating: 5,
         comment: "course id is 1 and comment id =5 Fusion!",
         author: "John Lemon",
-        date: "2012-10-16T17:57:28.556094Z"
+        date: "2012-10-16T17:57:28.556094Z",
     },
     {
         id: 6,

@@ -55,6 +55,7 @@ axios.post("api/uploadfile", formdata);
     );
   } */
 
+import { baseurl } from "../redux/baseURL"
 import { Loading } from "./Loading"
 
 
@@ -98,7 +99,7 @@ function Videocard(props){
   return(
     <a href="/" className="card m-1 cardCourse">
       <div className="homeimagediv">
-        <img controls className="homeimage" controlsList="nodownload" id="videoPlayer" src={props.item.image} alt="pic"/>
+        <img controls className="homeimage" controlsList="nodownload" id="videoPlayer" src={ baseurl + props.item.image} alt="pic"/>
       </div>
       <div className="cardContents">
         <i className="fa fa-like"></i>
@@ -117,8 +118,6 @@ function Videocard(props){
 
 
 function Home(props){
-
-
   return(
     <div className="">
 
@@ -139,13 +138,10 @@ function Home(props){
     </div>
 </div> 
     </div>
-)
-  
-}
-
+)}
 
 function RenderHomeCourse(props){
-  
+  console.log(props)
   if(props.Loading_courses){
     return(
       <div className="">
@@ -157,10 +153,20 @@ function RenderHomeCourse(props){
     return(
       <div className="text-center">
         <h2>{props.errmsg} </h2>
+          <div className=" d-flex flex-wrap">
+                  <div className="card col -3 failed_to_fetch" width="40">
+                      failed to fetch 
+                      <p>The error is ::  {props.errmsg}</p>
+                  </div>
+                  <div className="card card col -3 failed_to_fetch">
+                      failed to fetch
+                  </div>
+              </div> 
       </div>
     )
   }
   else if(props.courses){
+    console.log(props.courses)
     let course=props.courses.map(item=>{
       return(
         <div key={item.id} className="cardbox" >
@@ -177,7 +183,7 @@ function RenderHomeCourse(props){
 
   else{
     return(
-      <div className=""></div>
+      <div className="">home error</div>
     )
   }
 }

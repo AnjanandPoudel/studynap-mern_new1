@@ -13,7 +13,6 @@ function Footer(){
                          <a href="/">Blogs</a><br/>
                          <a href="/">Join us</a><br/>
                          <a href="/">Contributors</a> 
-
                     </div>
                     <div className="col-4">
                         <h5> Contact us </h5>
@@ -22,7 +21,6 @@ function Footer(){
                          <a href="/"> example@gmal.com </a> <br/>
                          <a href="/"> Ph no: 980909098</a><br/>
                          <a href="/"> Fax : 7687678</a> 
-
                     </div>
                     <div className="col-4">
                         <h5> Contact us </h5>
@@ -31,7 +29,6 @@ function Footer(){
                          <a href="/"> example@gmal.com </a> <br/>
                          <a href="/"> Ph no: 980909098</a><br/>
                          <a href="/"> Fax : 7687678</a> 
-
                     </div>
                 </div>
                 <div className="copyright">

@@ -1,7 +1,9 @@
 import { Component } from "react"
 import { Link, } from "react-router-dom"
 import { Modal, ModalBody, ModalHeader } from 'reactstrap'
+import { baseurl } from "../redux/baseURL"
 import { Loading } from "./Loading"
+import axios from 'axios'
 
 /* {
     id: 0,
@@ -24,7 +26,6 @@ class Courses extends Component{
     }
     
     render(){
-        console.log(this.props.Loading_courses)
         if(this.props.Loading_courses){
            return(
                <div className="">
@@ -35,33 +36,42 @@ class Courses extends Component{
         else if(this.props.errmsg){
             return(
                 <div className="text-center">
-                     <h2> {this.props.errmsg} </h2>
+                    <h2> {this.props.errmsg} </h2>
+                    <div className=" d-flex flex-wrap">
+                    <div className="card col -3 failed_to_fetch">
+                            failed to fetch
+                        </div>
+                        <div className="card card col -3 failed_to_fetch">
+                            failed to fetch
+                        </div>
+                        <div className="card card col -3 failed_to_fetch">
+                            failed to fetch
+                        </div>
+                    </div> 
                 </div>
             )
         }
-        else if(this.props.courses!=null){
+        else if(this.props.courses){
             let  menu=this.props.courses.map(course=>{
                 return(
                   <div    /*  onClick={()=>this.props.onClick(course.id)} */   className=" cardsInCourse" key={course.id}>
                       <Link to={`/courses/${course.id}`} >
-                        <RenderCourse course={course}  />
+                        <RenderCourse course={course}/>
                       </Link>
                   </div>
                 )
              })
                 return(
                     <div className="">
-        
                         <div className="container-fluid pt-5 bg-course">
                             <div className="row">
                                 <div className="bg-course col-12 ">
-                                    <div className="m-3 cards  d-flex flex-wrap">
+                                    <div className="m-3 cards   d-flex flex-wrap">
                                         {menu}
                                     </div>
                                 </div>
                             </div>
                         </div> 
-        
                         <div className="col-10 col-sm-6 col-md-4 col-lg-3 addcard">
                             <AddCourse add_courses={this.props.add_courses} />
                         </div>
@@ -84,10 +94,12 @@ class Courses extends Component{
 
 function RenderCourse(props){
     if(props.course){
+        console.log(props.course.image.length);
+        console.log('hjekheih hfhhhhhhhhhh')
         return(
             <div  className="card m-1 cardCourse">
                 <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={props.course.image} alt="pic"/>
+                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={parseInt(props.course.image.length,10)<50 ? baseurl+props.course.image : props.course.image} alt="pic"/>
                 </div>
                 <div className="cardContents d-flex justify-content-between">
                  <span className="smalltext">33 <i className="fa fa-thumbs-up  "></i> </span>
@@ -115,7 +127,7 @@ class AddCourse extends Component{
     constructor(props){
        super()
        this.state={
-         selectedfile:null,
+         selectedfile:'',
          name:'',
          email:'',
          subject:'',
@@ -131,26 +143,16 @@ class AddCourse extends Component{
        this.setState({
          selectedfile:event.target.files[0]
        })
-       console.log(this.state.selectedfile);
      }
    
      handleChangeinput(event){
        let target=event.target;
        let name=target.name;
        let value=target.type ==="checkbox" ? target.checked :target.value  ;
-   
        this.setState({
          [name]:value
        })
-   /*     const formdata=new FormData();
-       formdata.append('inputfield',this.state)
-   
-     //   fetch('http://localhost:3001/courses',{
-      // method:'POST',
-     //  body:formdata
-     //})
-       axios.post("api/uploadfile", formdata); 
-       console.log(formdata) */
+  
      }
 
      handletoggle=()=>{
@@ -158,27 +160,15 @@ class AddCourse extends Component{
             modelopen:!this.state.modelopen
         })
     }
-   
-     handleSubmit=(event)=>{
+        
+    handleSubmit = (event) => {
         event.preventDefault();
+        console.log(this.state.selectedfile)
         this.handletoggle();
-        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description);
-       
-     }
-   /* 
-     id: 1,
-     name:'Science Course',
-     image: '/assets/images.jpeg',
-     subject:'Science',
-     grade:'10',
-     category: 'Science',
-     label:'Hot',
-     price:'4.99',
-     featured: true,
-     description:'This is course hosted by mr. Anjan Poudel. He is teaching maths in this course'  ,
-     likes:34,
-     rating:5 
-    */
+        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,'https://www.bing.com/images/search?view=detailV2&ccid=pLR2UXZI&id=E1C0DDEDE76B46770C9C8C1265713EA54A62A09D&thid=OIP.pLR2UXZIK-oWC76-XMX2iAHaEK&mediaurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fRa4b4765176482bea160bbebe5cc5f688%3frik%3dnaBiSqU%252bcWUSjA%26riu%3dhttp%253a%252f%252fwallpapersdsc.net%252fwp-content%252fuploads%252f2016%252f09%252fCape-Town-Images.jpeg%26ehk%3dC%252bkY4l5f7CeMpA9xz6hCHzeFR9Fg4biJD%252boq49ZFDgc%253d%26risl%3d%26pid%3dImgRaw&exph=1080&expw=1920&q=images&simid=608028092623554036&ck=4D653E04F58BE50549A0360870232D81&selectedIndex=1&FORM=IRPRST');
+ 
+    }
+  
      
      render(){
        return (
