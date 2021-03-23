@@ -20,8 +20,6 @@ export const Courses=(state={
             return{...state,isLoading:false,errmsg:action.payload,courses:[]}
         case ActionType.ADD_COURSES:
             let course=action.payload;
-            course.grade=5;
-            course.price=2;
             return {...state,courses:state.courses.concat(course)}
         default:
         return state;

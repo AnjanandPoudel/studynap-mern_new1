@@ -5,13 +5,20 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let mongoose=require('mongoose')
 
+
+let passport=require('passport')
+let authenticate=require('./authenticate')
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var courserouter=require('./routes/apis/courserouter')
+var courserouter=require('./routes/apis/courserouter');
+let commentRouter=require('./routes/apis/commentrouter');
 
 
 let mongodburl=require('./config/keys').mongodb;
 const { Mongoose } = require('mongoose');
+const { session } = require('passport');
 
 mongoose.connect(mongodburl,{ useNewUrlParser: true ,useUnifiedTopology: true}).then(()=>{
   console.log('Connected to database')
@@ -30,9 +37,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(passport.initialize());
+authenticate();
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/courses',courserouter)
+app.use('/courses',courserouter);
+app.use('/comments',commentRouter);
+
+
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

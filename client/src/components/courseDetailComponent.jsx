@@ -46,7 +46,7 @@ class CourseDetail extends Component{
     }
    
     render(){
-        console.log(this.state.onecourse)
+        console.log(this.props)
 
         if(true){
             return(
@@ -65,7 +65,7 @@ class CourseDetail extends Component{
 
 
 function CoursekoDetail(props){
-
+    console.log(props)
     if(props.Loading_courses){
         return(
             <div className="m-5 col-5 p-5">
@@ -93,7 +93,7 @@ function CoursekoDetail(props){
         return(
             <div  className="card m-1 cardCourse col-sm-12 col-md-6 col-lg-4">
                 <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={parseInt(props.course.image.length,10)<50 ? baseurl+props.course.image : props.course.image} alt="pic"/>
+                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={ props.course.image} alt="pic"/>
                 </div>
                 <div className="cardContents d-flex justify-content-between">
                 <span className="smalltext">{props.course.grade} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue boxy" id="likeCourse"></i> </span>

@@ -33,7 +33,7 @@ export const postComments=( c,r,comment,author )=>(dispatch)=>{
 
 export const postCourses=(name,email,subject,descp,selectedfile)=>(dispatch)=>{
     let ourdata={
-        name:name,
+        videotitle:name,
         email:email,
         subject:subject,
         description:descp,
@@ -44,13 +44,17 @@ export const postCourses=(name,email,subject,descp,selectedfile)=>(dispatch)=>{
  */
     return axios({
         method: 'post',
-        url:baseurl+ 'COURSES',
-        data:ourdata
+        url:baseurl+ 'courses',
+        data:ourdata,
+        headers:{
+            'Content-Type':'application/json'
+        },
+        credentials: 'same-origin'
       })
     .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
     .then(res=>dispatch(add_course(res)))
     .catch(error=>{ console.log('Error  posting courses', error);
-        alert('Error posting courses: This may be an error from server ::::::::: '+error);
+        alert('Error posting courses: This may be an error from server :::::::::===> '+error);
     })
 }
 export const add_course=(course)=>({
@@ -88,7 +92,11 @@ export const add_course=(course)=>({
 
 export const fetchCourses=()=>(dispatch)=>{
     dispatch(loading_courses(true));
-    return axios.get(baseurl+'COURSES')
+    return axios({
+        method: 'get',
+        url:baseurl+ 'courses',
+
+      })
     .then(res=>res.data)
     .then(res=>(dispatch(show_courses(res))))
     .catch(err=>{dispatch(failed_courses(err.message))})

@@ -1,23 +1,42 @@
 const mongoose=require('mongoose');
 
-let courseModel=new mongoose.Schema({
+
+/* videotitle:name,
+email:email,
+subject:subject,
+description:descp,
+image:selectedfile */
+
+let CourseModel=new mongoose.Schema({
     videotitle:{
         type:String,
-        default:'name'
+        default:'Anjan'
     },
-    descp:{
+    description:{
         type:String,
-        default:'descp'
+        default:'This section contains description '
     },
     Rate:{
         type:Number,
-        default:0
+        default:3
+    },
+    Likes:{
+        type:Number,
+        default:78
     },
     author:{
         type:String,
         default:"Author"
+    },
+    email:{
+        type:String,
+        default:"Author@gmail.com"
+    },
+    image:{
+        type:String,
+        default:"images/p.png"
     }
 })
 
-let model=mongoose.model('courseModel',courseModel)
+let model=mongoose.model('courseModel',CourseModel)
 module.exports=model

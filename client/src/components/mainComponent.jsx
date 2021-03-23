@@ -76,8 +76,8 @@ class Main extends Component{
           console.log(this.props.comments.show_comments)
           console.log("This is where i find most of those things")
           return(
-            <CourseDetail course={this.props.courses.courses.filter(item => item.id === parseInt(match.params.courseId,10) )[0] }
-                          comments={this.props.comments.show_comments.filter(item=> item.courseId === parseInt(match.params.courseId,10) )}
+            <CourseDetail course={this.props.courses.courses.filter(item => console.log(match) ) }
+                          comments={this.props.comments.show_comments.filter(item=> item.courseId === match.params.courseId)}
                           add_comments={this.props.props_addComment}
                           Loading_courses={this.props.courses.isLoading} 
                           errmsg={this.props.courses.errmsg}

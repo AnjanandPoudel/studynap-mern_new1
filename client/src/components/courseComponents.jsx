@@ -54,8 +54,8 @@ class Courses extends Component{
         else if(this.props.courses){
             let  menu=this.props.courses.map(course=>{
                 return(
-                  <div    /*  onClick={()=>this.props.onClick(course.id)} */   className=" cardsInCourse" key={course.id}>
-                      <Link to={`/courses/${course.id}`} >
+                  <div    /*  onClick={()=>this.props.onClick(course.id)} */   className=" cardsInCourse" key={course._id}>
+                      <Link to={`/courses/${course._id}`} >
                         <RenderCourse course={course}/>
                       </Link>
                   </div>
@@ -94,20 +94,19 @@ class Courses extends Component{
 
 function RenderCourse(props){
     if(props.course){
-        console.log(props.course.image.length);
-        console.log('hjekheih hfhhhhhhhhhh')
+        console.log(props.course);
         return(
             <div  className="card m-1 cardCourse">
                 <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={parseInt(props.course.image.length,10)<50 ? baseurl+props.course.image : props.course.image} alt="pic"/>
+                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={baseurl+props.course.image} alt="pic"/>
                 </div>
                 <div className="cardContents d-flex justify-content-between">
-                 <span className="smalltext">33 <i className="fa fa-thumbs-up  "></i> </span>
-                   <span className="stars">5   <i className="fa fa-star yellow"></i> </span>
+                 <span className="smalltext">{props.course.Likes} <i className="fa fa-thumbs-up  "></i> </span>
+                   <span className="stars">{props.course.Rate} <i className="fa fa-star yellow"></i> </span>
                     
                 </div>
                 <div className="p-2">
-                    <p className="m-0 bold">{props.course.name}</p>
+                    <p className="m-0 bold">{props.course.videotitle}</p>
                     <p className="smalltext"> {props.course.description} </p>
                 </div>
             </div>
@@ -165,7 +164,7 @@ class AddCourse extends Component{
         event.preventDefault();
         console.log(this.state.selectedfile)
         this.handletoggle();
-        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,'https://www.bing.com/images/search?view=detailV2&ccid=pLR2UXZI&id=E1C0DDEDE76B46770C9C8C1265713EA54A62A09D&thid=OIP.pLR2UXZIK-oWC76-XMX2iAHaEK&mediaurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fRa4b4765176482bea160bbebe5cc5f688%3frik%3dnaBiSqU%252bcWUSjA%26riu%3dhttp%253a%252f%252fwallpapersdsc.net%252fwp-content%252fuploads%252f2016%252f09%252fCape-Town-Images.jpeg%26ehk%3dC%252bkY4l5f7CeMpA9xz6hCHzeFR9Fg4biJD%252boq49ZFDgc%253d%26risl%3d%26pid%3dImgRaw&exph=1080&expw=1920&q=images&simid=608028092623554036&ck=4D653E04F58BE50549A0360870232D81&selectedIndex=1&FORM=IRPRST');
+        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,'images/way.jpg');
  
     }
   
@@ -227,6 +226,5 @@ class AddCourse extends Component{
     }
 }
 
-  
 
 export default Courses;

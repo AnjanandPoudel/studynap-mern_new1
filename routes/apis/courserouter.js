@@ -20,15 +20,28 @@ router.route('/')
     .catch(err=>next(err))
 })
 .post(cors.corsWithOptions,(req,res,next)=>{
+  courseModels.create(req.body)
+  .then((info)=>{
+    res.statusCode=200;
+    res.setHeader('Content-Type','application/json');
+    res.json(info);
+  },err=>next(err))
+  .catch(err=>next(err))
 
+})
 
-    var form = new formidable.IncomingForm();
-    form.parse(req, function (err, fields, files) {
+/* 
+.post(cors.cors,(req,res,next)=>{
+    let form = new formidable.IncomingForm();
+    console.log(req.body)
+    form.parse(req,  (err, fields, files)=> {
       if(err){
-        next (err)
+        return res.status(400).json({
+          error: "Image could not upload"
+      })
       }
   
-      if(files.videoname){
+      else if(files.videoname){
         let oldpath=files.videoname.path;
         let videoname='__ap__'+createdAt+files.videoname.name
         videoname=videoname.replace(/ /g, '')
@@ -63,48 +76,17 @@ router.route('/')
         })
         .catch(e=>{
           console.log('uploadposterror')
-          console.log(e)
         })
       }
+      
       else{
-        let err=new Error('Add files first')
+        let err=new Error('Add files first , files add bhako xaina')
         err.status=401;
-        next(err)
+        return next(err)
       }
     
     });
-      //to move the file in the desired location
-  
-  
-
-/* 
-    var form= new formidable.IncomingForm();
-    form.parse(req,(err,fields,files)=>{
-        if(files.videoname){
-            let oldpath=files.videoname.path;
-            let newpath='/videos/'+'__'+createdAt+files.videoname.name;
-    
-            fs.rename(oldpath,newpath,(err)=>{
-                if (err) throw err;
-                res.write('files uploded and moved');
-                res.end()
-            })
-
-            courseModels.create(req.body)
-            .then(item=>{
-                res.statusCode=200;
-                res.setHeader('Content-Type','application/json')
-                res.json(item)
-            })
-            .catch(err=>next(err))
-        }
-        else{
-            res.write('post error in courserouter ')
-            res.end()
-        }
-        
-    }) */
-})
+}) */
 .put((req,res)=>{
     res.write('Not supported ... Try another request')
     res.end()
