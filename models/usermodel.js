@@ -2,8 +2,15 @@ const mongoose=require('mongoose');
 
 let passLM=require('passport-local-mongoose')
 
-let Usermodel=new mongoose.Schema({
-    
+let User=new mongoose.Schema({
+    firstName:{
+        type:String,
+        default:"firstname"
+    },
+    lastName:{
+        type:String,
+        default:"lastname"
+    },
     admin:{
         type:Boolean,
         default:false
@@ -12,8 +19,8 @@ let Usermodel=new mongoose.Schema({
 
 //automatically add username and passwd
 //(password hashing , username unique all conditions are checked automatically)
-Usermodel.plugin(passLM);
+User.plugin(passLM);
 
 
-let model=mongoose.model('User',Usermodel)
+let model=mongoose.model('User',User)
 module.exports=model

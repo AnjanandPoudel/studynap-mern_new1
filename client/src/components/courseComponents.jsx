@@ -18,6 +18,7 @@ import axios from 'axios'
     description:'This is course hosted by mr. Anjan Poudel. He is teaching maths in this course'                    
 },
  */
+
 class Courses extends Component{  
     constructor(props){
         super(props)
@@ -88,8 +89,6 @@ class Courses extends Component{
     }
     
 }
-
-
 
 
 function RenderCourse(props){

@@ -75,9 +75,10 @@ class Main extends Component{
         const courseDetailComp=({match})=>{
           console.log(this.props.comments.show_comments)
           console.log("This is where i find most of those things")
+          console.log(this.props.courses.courses.filter(item=> item._id === match.params.courseId ))
           return(
-            <CourseDetail course={this.props.courses.courses.filter(item => console.log(match) ) }
-                          comments={this.props.comments.show_comments.filter(item=> item.courseId === match.params.courseId)}
+            <CourseDetail course={this.props.courses.courses.filter(item=> item._id === match.params.courseId )[0] } // single course
+                          comments={this.props.comments.show_comments.filter(item=> item.courseId === match.params.courseId)} // comment array
                           add_comments={this.props.props_addComment}
                           Loading_courses={this.props.courses.isLoading} 
                           errmsg={this.props.courses.errmsg}

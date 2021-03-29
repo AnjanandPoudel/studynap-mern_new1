@@ -1,36 +1,44 @@
 const express=require('express');
-const fs=require('fs')
-const path=require('path')
-const formidable=require('formidable')
-let router=express.Router()
-let courseModels=require('../../models/courseModel')
-let cors=require('../cors')
+const fs=require('fs');
+const path=require('path');
+const formidable=require('formidable');
 
+let router=express.Router();
+let courseModels=require('../../models/courseModel');
+let cors=require('../cors');
+let authenticate=require('../../authenticate');
 let createdAt=new Date()
 
 router.route('/')
 .options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200)})
 .get(cors.cors,(req,res,next)=>{
-    courseModels.find()
+    courseModels.find({})
+    .populate('author')
     .then(item=>{
         res.statusCode=200;
         res.setHeader('Content-Type','application/json')
         res.json(item)
-    })
+    },err=>next(err))
     .catch(err=>next(err))
 })
-.post(cors.corsWithOptions,(req,res,next)=>{
+.post(cors.corsWithOptions,authenticate.verifyUser ,(req,res,next)=>{
+  req.body.author=req.user._id;
   courseModels.create(req.body)
-  .then((info)=>{
-    res.statusCode=200;
-    res.setHeader('Content-Type','application/json');
-    res.json(info);
+  .then((course)=>{
+    courseModels.findById(course._id)
+    .populate('author')
+    .then(info=>{
+      res.statusCode=200;
+      res.setHeader('Content-Type','application/json');
+      res.json(info);
+    })
+    .catch(err=>next(err))
   },err=>next(err))
   .catch(err=>next(err))
 
 })
 
-/* 
+/*
 .post(cors.cors,(req,res,next)=>{
     let form = new formidable.IncomingForm();
     console.log(req.body)
@@ -87,12 +95,12 @@ router.route('/')
     
     });
 }) */
-.put((req,res)=>{
+.put(cors.corsWithOptions,authenticate.verifyUser  ,(req,res)=>{
     res.write('Not supported ... Try another request')
     res.end()
 })
-.delete((req,res,next)=>{
-    courseModels.remove({})
+.delete(cors.corsWithOptions,authenticate.verifyUser, authenticate.verifyAdmin,(req,res,next)=>{
+    courseModels.deleteMany({})
     .then(item=>{
         res.statusCode=200;
         res.setHeader('Content-Type','application/json')
@@ -100,19 +108,12 @@ router.route('/')
     })
     .catch(err=>next(err))
 })
-
-
-
-
-  
-  
-  
-
 
 
 router.route('/:id')
-.get((req,res,next)=>{
+.get(cors.corsWithOptions,(req,res,next)=>{
     courseModels.findById(req.params.id)
+    .populate('author')
     .then(item=>{
         res.statusCode=200;
         res.setHeader('Content-Type','application/json')
@@ -120,27 +121,71 @@ router.route('/:id')
     })
     .catch(err=>next(err))
 })
-.put((req,res,next)=>{
-    courseModels.findByIdAndUpdate(req.params.id,{$set:req.body},{new:true})
-    .then(item=>{
-        res.statusCode=200;
+.put(cors.corsWithOptions,authenticate.verifyUser  ,(req,res,next)=>{
+    courseModels.findById(req.params.id)
+    .then(course=>{
+      console.log(req.user._id)
+      if(req.user._id.equals(course.author)){
+        courseModels.findByIdAndUpdate(req.params.id,{$set:req.body},{new:true})
+          .populate('author')
+          .then(item=>{
+              res.statusCode=200;
+              res.setHeader('Content-Type','application/json')
+              res.json(item)
+          })
+          .catch(err=>next(err))
+      }
+      else{
+        /* let err=new Error('Hello babe you are not the right user '+req.user.author)
+        err.status=401;
+        next(err) */
+
+        res.statusCode=401;
         res.setHeader('Content-Type','application/json')
-        res.json(item)
+        res.json({err:"Hello babe you are not the right user , "+req.user.username})
+        
+      }
     })
-    .catch(err=>next(err))
+      .catch(err=>next(err))
+    
 })
-.post((req,res)=>{
-    res.write('Not supported ... Try another request')
-    res.end()
+.post(cors.corsWithOptions,authenticate.verifyUser  ,(req,res)=>{
+  res.write('Not supported ... Try another request')
+  res.end()
 })
-.delete((req,res,next)=>{
-    courseModels.findByIdAndDelete(req.params.id)
-    .then(item=>{
-        res.statusCode=200;
-        res.setHeader('Content-Type','application/json')
-        res.json(item)
-    })
-    .catch(err=>next(err))
+.delete(cors.corsWithOptions,authenticate.verifyUser ,  (req,res,next)=>{
+  console.log('hiiiiiiiiiii')
+
+
+  courseModels.findById(req.params.id)
+  .then(course=>{
+    if(course.author.equals(req.user._id)){
+      courseModels.findByIdAndDelete(req.params.id)
+      .then(item=>{
+          res.statusCode=200;
+          res.setHeader('Content-Type','application/json')
+          res.json(item)
+      })
+      .catch(err=>next(err))
+    }
+    else if(authenticate.verifyAdminBoolean(req.user)){
+      courseModels.findByIdAndDelete(req.params.id)
+      .then(item=>{
+          res.statusCode=200;
+          res.setHeader('Content-Type','application/json')
+          res.json({item:item,warning:"This is not done by the course's owner, but it is done by "+ req.user.username + " whose admin status is ("+req.user.admin +") ", })
+      })
+      .catch(err=>next(err))
+    }
+    else{
+      res.statusCode=401;
+      res.setHeader('Content-Type','application/json')
+      res.json({err:"Hello babe you are not the right user , "+req.user.username})
+      
+    }
+  })
+  .catch(err=>next(err))
+    
 })
 
 module.exports=router

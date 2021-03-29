@@ -14,18 +14,28 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var courserouter=require('./routes/apis/courserouter');
 let commentRouter=require('./routes/apis/commentrouter');
+let uploadRouter=require('./routes/apis/uploadrouter');
 
 
 let mongodburl=require('./config/keys').mongodb;
-const { Mongoose } = require('mongoose');
-const { session } = require('passport');
 
-mongoose.connect(mongodburl,{ useNewUrlParser: true ,useUnifiedTopology: true}).then(()=>{
+
+mongoose.connect(mongodburl,{ useNewUrlParser: true ,useUnifiedTopology: true ,useFindAndModify:false}).then(()=>{
   console.log('Connected to database')
 })
 .catch((err)=>console.log(err))
 mongoose.set('useCreateIndex', true);
 var app = express();
+
+app.all('*',(req,res,next)=>{
+  if(req.secure){
+    return next();
+  }
+  else {
+    res.redirect(307, 'https://' + req.hostname + ':' + app.get('secPort') + req.url);
+  }
+})
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,15 +49,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(passport.initialize());
-authenticate();
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/courses',courserouter);
 app.use('/comments',commentRouter);
-
-
-
+app.use('/upload',uploadRouter);
 
 
 

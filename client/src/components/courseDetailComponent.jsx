@@ -22,7 +22,6 @@ class CourseDetail extends Component{
         this.likehandleClick=this.likehandleClick.bind(this)
     }
 
-
     likehandleClick(){
         if(this.state.onecourse){
             this.setState({
@@ -65,7 +64,6 @@ class CourseDetail extends Component{
 
 
 function CoursekoDetail(props){
-    console.log(props)
     if(props.Loading_courses){
         return(
             <div className="m-5 col-5 p-5">
@@ -88,20 +86,35 @@ function CoursekoDetail(props){
             </div>
         )
     }
+
+    
+/* 
+    Likes: 78
+Rate: 3
+author: "Author"
+description: "This section contains description "
+email: "Author@gmail.com"
+image: "images/p.png"
+videotitle: "Anjan"
+*/
     
     else if(props.course){
+        console.log(props.course)
+
         return(
             <div  className="card m-1 cardCourse col-sm-12 col-md-6 col-lg-4">
                 <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={ props.course.image} alt="pic"/>
+                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={baseurl+ props.course.image} alt="pic"/>
                 </div>
                 <div className="cardContents d-flex justify-content-between">
-                <span className="smalltext">{props.course.grade} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue boxy" id="likeCourse"></i> </span>
-                    <span className="stars boxy">{props.course.price}   <i className="fa fa-star yellow starCourse"></i> </span>
+                <span className="smalltext">{props.course.Likes} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue boxy" id="likeCourse"></i> </span>
+                    <span className="stars boxy">{props.course.Rate}   <i className="fa fa-star yellow starCourse"></i> </span>
                     
                 </div>
                 <div className="p-2">
-                    <p className="m-0 bold">{props.course.name}</p>
+                    <p className="m-0 bold">{props.course.videotitle}</p>
+                    <p className="m-0 ">Author: {props.course.author}</p>
+
                     <p className="smalltext"> {props.course.description} </p>
                 </div>
             </div>
@@ -144,6 +157,7 @@ function Comment(props){
         )
     }
 
+
     else if(props.comments){
         let commentarr=props.comments.map(item=>{
             return(
@@ -151,7 +165,7 @@ function Comment(props){
                     <div className="p-1 card">
                         <div className="d-flex justify-content-between flex-wrap m-2">
                             <span className="smalltext bold" > {item.author}</span> 
-                            <span className="smalltext"> {item.rating} <i className="fa fa-star yellow"></i> </span> <br/>
+                            <span className="smalltext"> {item.rate} <i className="fa fa-star yellow"></i> </span> <br/>
                             <span className="smalltext m-0 ">{item.date.split("T")[0]}</span> 
                         </div>
                         <div className="">

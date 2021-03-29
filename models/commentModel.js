@@ -1,32 +1,35 @@
+
 const mongoose=require('mongoose');
+const Schema=mongoose.Schema;
 
 
 
-let Comments=new mongoose.Schema({
-    comment:{
-        type:String,
-        default:"This is where u post comment"
-    },
-    date:{
-        type:String,
-        default:new Date().toISOString()
+
+
+
+const commentSchema=new Schema({
+    rating:{
+        type:Number ,
+        min:1,
+        max:5,
+        required:true
     },
     author:{
-        type:String,
-        default:'objecttype'
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
     },
-    rate:{
+    comment:{
         type:String,
-        default:4
+        default:'nothing',
+        required:true
     },
-    courseId:{
-        type:String,
-        default:'605442a0b6f36a39a455f73f'
+    course:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'courseModel'
     }
+},{timestamps:true}
+)
 
-},{timestamps:true})
+let Comments=mongoose.model('Comment',commentSchema)
 
-let commentModel= mongoose.model('Comments',Comments);
-
-module.exports=commentModel;
-
+module.exports=Comments

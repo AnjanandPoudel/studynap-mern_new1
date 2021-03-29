@@ -1,6 +1,4 @@
 const mongoose=require('mongoose');
-
-
 /* videotitle:name,
 email:email,
 subject:subject,
@@ -25,8 +23,8 @@ let CourseModel=new mongoose.Schema({
         default:78
     },
     author:{
-        type:String,
-        default:"Author"
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User' //name of model
     },
     email:{
         type:String,
