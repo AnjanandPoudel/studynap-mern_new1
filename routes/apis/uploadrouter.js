@@ -1,9 +1,7 @@
 const express=require('express');
 const multer=require('multer');
-
 let authenticate=require('../../authenticate');
 const cors  = require('../cors');
-
 
 const storage=multer.diskStorage({
     destination:(req,file,cb)=>{
@@ -17,15 +15,14 @@ const storage=multer.diskStorage({
 
 //regular expression /.\('.....')$/
 const imageFiltering=(req,file,cb)=>{
-    if(!file.originalname.match(/\.('jpg|jpeg|png|gif')$/)){
+    if(!file.originalname.match(/\.(jpg|jpeg|png|gif|mp4)$/)){
         cb(new Error('Please choose the image file only (.jpg/.jpeg/.png/.gif) extensions'),false)
     }
-    cb(null,true)
+    else{
+        cb(null,true)
+    }
 }
-
 let upload = multer({storage:storage,fileFilter:imageFiltering});
-
-
 
 let uploadRouter=express.Router();
 

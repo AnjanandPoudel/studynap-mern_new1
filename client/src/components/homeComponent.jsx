@@ -166,7 +166,7 @@ function RenderHomeCourse(props){
     console.log(props.courses)
     let course=props.courses.map(item=>{
       return(
-        <div key={item.id} className="cardbox" >
+        <div key={item._id} className="cardbox" >
           <Videocard item={item} />
         </div>
       )

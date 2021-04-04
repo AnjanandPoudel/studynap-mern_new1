@@ -1,9 +1,17 @@
 import React from 'react';
 
 
+
 function Footer(){
+
     return(
         <div className="footer">
+        <h2>Hey welcome to our app</h2>
+     
+        
+        <h2>Be more secure with Oauth 2.0 authentication</h2>
+
+
             <div className="container">
                 <div className="row">
                     <div className="col-4">
@@ -13,6 +21,7 @@ function Footer(){
                          <a href="/">Blogs</a><br/>
                          <a href="/">Join us</a><br/>
                          <a href="/">Contributors</a> 
+
                     </div>
                     <div className="col-4">
                         <h5> Contact us </h5>
@@ -21,6 +30,7 @@ function Footer(){
                          <a href="/"> example@gmal.com </a> <br/>
                          <a href="/"> Ph no: 980909098</a><br/>
                          <a href="/"> Fax : 7687678</a> 
+
                     </div>
                     <div className="col-4">
                         <h5> Contact us </h5>
@@ -29,6 +39,7 @@ function Footer(){
                          <a href="/"> example@gmal.com </a> <br/>
                          <a href="/"> Ph no: 980909098</a><br/>
                          <a href="/"> Fax : 7687678</a> 
+
                     </div>
                 </div>
                 <div className="copyright">

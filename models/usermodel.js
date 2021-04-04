@@ -14,7 +14,8 @@ let User=new mongoose.Schema({
     admin:{
         type:Boolean,
         default:false
-    }
+    },
+    facebookId:String
 })
 
 //automatically add username and passwd

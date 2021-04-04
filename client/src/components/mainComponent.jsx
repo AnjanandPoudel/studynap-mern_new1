@@ -10,7 +10,7 @@ import Contact from './contactComponent';
 import CourseDetail from './courseDetailComponent';
 
 import {connect} from 'react-redux';
-import {postComments,postCourses,fetchCourses,fetchcomments } from '../redux/ActionCreators';
+import {postComments,postCourses,fetchCourses,fetchcomments,loginUser } from '../redux/ActionCreators';
 
 
 const mapStatetoProps= state=>{
@@ -28,7 +28,8 @@ const mapDispatchtoProps=(dispatchIt)=>({
     dispatchIt(postCourses(name,email,subject,descp,selectedfile))
   },
   fetchCourses:()=>{dispatchIt(fetchCourses())},
-  fetchcomments:()=>{dispatchIt(fetchcomments())}
+  fetchcomments:()=>{dispatchIt(fetchcomments())},
+  loginUser:(creds)=>{dispatchIt(loginUser(creds))}
 })
 
 
@@ -75,10 +76,11 @@ class Main extends Component{
         const courseDetailComp=({match})=>{
           console.log(this.props.comments.show_comments)
           console.log("This is where i find most of those things")
-          console.log(this.props.courses.courses.filter(item=> item._id === match.params.courseId ))
+          console.log(this.props.comments.show_comments.filter(item=> item.course === match.params.courseId) // comment array 
+          )
           return(
             <CourseDetail course={this.props.courses.courses.filter(item=> item._id === match.params.courseId )[0] } // single course
-                          comments={this.props.comments.show_comments.filter(item=> item.courseId === match.params.courseId)} // comment array
+                          comments={this.props.comments.show_comments.filter(item=> item.course === match.params.courseId)} // comment array
                           add_comments={this.props.props_addComment}
                           Loading_courses={this.props.courses.isLoading} 
                           errmsg={this.props.courses.errmsg}
@@ -103,10 +105,12 @@ class Main extends Component{
           )
         }
 
+     
+
         return (
         
           <div className="">
-           <Header />
+           <Header  loginUser={this.props.loginUser} />
           
             <Switch>
               <Route path="/home" component={HomePage} />

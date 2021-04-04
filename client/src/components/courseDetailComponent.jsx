@@ -1,8 +1,9 @@
-import {Button, Form, Input} from 'reactstrap'
+import {Button, Form, Input,Row,Col,Label} from 'reactstrap'
 import React, { Component } from 'react';
-import { add_comments } from '../redux/ActionCreators';
 import { Loading } from './Loading';
 import { baseurl } from '../redux/baseURL';
+import { Control, LocalForm } from 'react-redux-form';
+
 
 
 
@@ -46,7 +47,6 @@ class CourseDetail extends Component{
    
     render(){
         console.log(this.props)
-
         if(true){
             return(
             <div className="d-flex flex-wrap m-1">
@@ -56,12 +56,8 @@ class CourseDetail extends Component{
             </div>
             )
         }
-
-        
-        
     }
 }
-
 
 function CoursekoDetail(props){
     if(props.Loading_courses){
@@ -113,7 +109,7 @@ videotitle: "Anjan"
                 </div>
                 <div className="p-2">
                     <p className="m-0 bold">{props.course.videotitle}</p>
-                    <p className="m-0 ">Author: {props.course.author}</p>
+                    <p className="m-0 ">Author: {props.course.author.username}</p>
 
                     <p className="smalltext"> {props.course.description} </p>
                 </div>
@@ -160,17 +156,17 @@ function Comment(props){
 
     else if(props.comments){
         let commentarr=props.comments.map(item=>{
+            console.log(item)
             return(
-                <div className="" key={item.id}>
-                    <div className="p-1 card">
+                <div className="" key={item._id}>
+                    <div className="p-0 mycard">
                         <div className="d-flex justify-content-between flex-wrap m-2">
-                            <span className="smalltext bold" > {item.author}</span> 
-                            <span className="smalltext"> {item.rate} <i className="fa fa-star yellow"></i> </span> <br/>
-                            <span className="smalltext m-0 ">{item.date.split("T")[0]}</span> 
+                            <span className="smalltext bold" > {item.author.username}</span> 
+                            <span className="smalltext"> {item.rating} <i className="fa fa-star yellow"></i> </span> <br/>
+                            <span className="smalltext m-0 ">{/* split("T")[0] */}</span> 
                         </div>
                         <div className="">
-                            <br/>
-                            <span className="medtext p-3 "> - {item.comment} </span> <br/>
+                            <span className="  pl-5 m-1 smalltext ">  {item.comment} </span> <br/>
                         </div>
                         </div>
                 </div>
@@ -188,7 +184,7 @@ function Comment(props){
                 <h4>Comments : </h4>
                 {commentarr}
                 
-                <CommentForm  author={props.author} add_comments={props.add_comments} courseId={props.course.id} />
+                <CommentForm  author={props.author} add_comments={props.add_comments} course={props.course._id} />
             </div>
         )
     }
@@ -203,9 +199,7 @@ class CommentForm extends Component{
     constructor(props){
         super()
         this.state={
-            comment:'',
             author:props.author,
-            rate:''
         }
     }
     handleChange=(event)=>{
@@ -217,20 +211,46 @@ class CommentForm extends Component{
         })
     }
     handleClick=(event)=>{
-        event.preventDefault();
-        this.props.add_comments(this.props.courseId,this.state.rate,this.state.comment,this.state.author);
+        this.props.add_comments(this.props.course,this.state.rate,this.state.comment,this.state.author);
     }
     render(){
         return(
             <div className="comment-form">
-                <Form action="" onSubmit={(values)=> {this.handleClick(values) }} className="form m-1">
+                <LocalForm  onSubmit={(values)=> {this.handleClick(values) }} className="form m-1">
                     <div className="form-group">
-                    <Input className="form-control" type="textarea" row={4} placeholder="Add Comments here"  name="comment" value={this.state.comment} onChange={this.handleChange}  />
-                    <Input type="number" name="rate" id="rate" onChange={this.handleChange} max="10"  placeholder="Rate from 1 to 10 stars"  value={this.state.rate}   />
+                    <Control.textarea className="form-control" type="textarea" row={4} placeholder="Add Comments here" model=".comment"  name="comment" value={this.state.comment} onChange={this.handleChange} />
+                    <Control.input type="number" name="rate" id="rate" onChange={this.handleChange} max="10"  model=".Rate" placeholder="Rate from 1 to 10 stars"  value={this.state.rate} />
 
                     <Button type="submit" className="btn btn-secondary">  Submit</Button>
                     </div>
-                </Form>
+
+                </LocalForm>
+{/* 
+                <LocalForm onSubmit={(values) => this.handleClick(values)}>
+                    <Row className="form-group">
+                        <Col>
+                        <Label htmlFor="rating">Rating</Label>
+                        <Control.select model=".Rate" name="Rate" id="rating" className="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </Control.select>
+                        </Col>
+                    </Row>
+                    <Row className="form-group">
+                        <Col>
+                        <Label htmlFor="comment">Comment</Label>
+                        <Control.textarea model=".comment" id="comment" name="comment"
+                                    rows="6" className="form-control" />
+                        </Col>
+                    </Row>
+                    <Button type="submit" className="bg-primary">
+                        Submit
+                    </Button>
+                </LocalForm> */}
+
             </div>
         )
     }

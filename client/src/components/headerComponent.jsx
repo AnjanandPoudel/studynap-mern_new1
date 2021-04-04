@@ -21,12 +21,13 @@ import {
     Label,
     Input
 } from 'reactstrap';
+import Oauth from './facebook';
 
 
 
 class Header extends Component{
-    constructor(){
-        super()
+    constructor(props){
+        super(props)
         this.state={
             open:true,
             modalOpen:false
@@ -46,16 +47,17 @@ class Header extends Component{
         console.log(this.state.modalOpen)
     }
     handleLogin(event){
-        this.toggleModal()
-        alert(this.username.value+ '  ' +this.password.value)
-        event.preventdefault()
+        this.toggleModal();
+        this.props.loginUser({username: this.username.value, password: this.password.value});
+        event.preventDefault();
+
     }
 
     
     render(){
         return(
             <div className="">
-                <Navbar color="dark" dark expand="md" >
+                <Navbar color="dark" dark expand="md sm" >
                     <NavbarBrand href="/"> studynap </NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.open} navbar className="navbarflex">
@@ -88,15 +90,17 @@ class Header extends Component{
                                 </DropdownMenu>
                             </UncontrolledDropdown>
                         </Nav>
-                        <Nav navbar>
+                        <Nav navbar className=" ">
                             <NavItem>
                                 <NavLink>
-                                    <Button onClick={this.toggleModal}>Login  <span className="fa fa-sign-in fa-lg"></span></Button>
+                                    <Button className=" bg-success" onClick={this.toggleModal}>Login  <span className=" fa fa-sign-in fa-lg"></span></Button>
                                 </NavLink>
                             </NavItem>
                         </Nav>
                     </Collapse>
                 </Navbar>
+
+                
 
                 <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal} className="loginmodal">
                     <ModalHeader className="m-1" toggle={this.toggleModal}>Login</ModalHeader>
@@ -118,6 +122,8 @@ class Header extends Component{
                             </FormGroup>
                             <Button type="submit" value="submit" className="btn btn-success">Login</Button>
                         </Form>
+                        <h4>dont't have an account? </h4>
+                        <Oauth /> 
                     </ModalBody>
                 </Modal>
             </div>

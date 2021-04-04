@@ -20,7 +20,7 @@ router.route('/')
 .post(cors.corsWithOptions,authenticate.verifyUser  ,(req,res,next)=>{
     if(req.user!==null){
         req.body.author=req.user._id
-        req.body.course=req.body.courseId
+        console.log(req.body)
         Comments.create(req.body)
         .then(comment=>{
            Comments.findById(comment._id)

@@ -11,25 +11,39 @@ export const add_comment=(comment )=>({
 
 export const postComments=( c,r,comment,author )=>(dispatch)=>{
     let ourdata={
-        courseId:c,
+        course:c,
         rating:r,
         comment:comment,
         author:author
     }
+    console.log(ourdata)
     ourdata.date=new Date().toISOString();
+
+    let bearer='bearer '+localStorage.getItem('token') 
 /*     return axios.post(baseurl+'courses',ourdata)
  */
     return axios({
         method: 'post',
         url:baseurl+ 'comments',
-        data:ourdata
+        data:ourdata,
+        headers:{
+            Authorization:bearer,
+
+        }
       })
     .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
-    .then(res=>dispatch(add_comment(res)))
+    .then(res=>{
+        console.log(res)
+        dispatch(add_comment(res))
+        fetchcomments()
+    })
+    
     .catch(error=>{ console.log('Error  posting comments', error);
         alert('Error posting comments: This may be an error from server ::::::::: '+error);
     })
 }
+
+
 
 export const postCourses=(name,email,subject,descp,selectedfile)=>(dispatch)=>{
     let ourdata={
@@ -87,6 +101,51 @@ export const add_course=(course)=>({
 
  */
 
+export const loginUser=(creds)=>(dispatch)=>{
+    //dispatching this to kick off the call to api says guru
+    dispatch(request_login(creds))
+
+    console.log(creds)
+    return axios({
+        method:'post',
+        url:baseurl+'users/login',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        data:JSON.stringify(creds)
+    })
+    .then(res=>res.data)
+    .then(res=>{
+        console.log(res)
+        if(res.success){
+            localStorage.setItem('token',res.token)
+            localStorage.setItem('creds',JSON.stringify(creds))
+            dispatch(success_login(res))
+        }
+        else{
+            console.log('Error ta xa')
+        }
+    })
+    .catch(err=>console.log(err+" ola ap  This is the error during login in user"))
+}
+
+export const request_login=(creds)=>({
+    type:ActionType.REQUEST_LOGIN,
+    creds
+})
+
+export const success_login=(creds)=>({
+    type:ActionType.REQUEST_SUCCESS,
+    token:creds.token
+})
+
+export const failed_login=(creds)=>({
+    type:ActionType.FAILED_LOGIN,
+    creds
+})
+
+
+
 
 
 
@@ -141,5 +200,4 @@ export const show_comments=(courses)=>({
     type:ActionType.SHOW_COMMENTS,
     payload:courses
 })
-
 

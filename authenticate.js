@@ -4,6 +4,7 @@ let User=require('./models/usermodel');
 
 let JwtStrategy=require('passport-jwt').Strategy;
 let JwtExtract=require('passport-jwt').ExtractJwt;
+let FacebookTokenStrategy=require('passport-facebook-token');
 let jwt=require('jsonwebtoken');
 let config=require('./config/keys')
 
@@ -77,3 +78,33 @@ exports.verifyAdminBoolean=(user)=>{
     }
  }
  
+
+ exports.facebookPassport=passport.use(new FacebookTokenStrategy({
+     clientID:config.facebook.clientId,
+     clientSecret:config.facebook.clientSecret
+ },(accessToken,refreshToken,profile,done)=>{
+    User.findOne({facebookId:profile.id},(err,user)=>{
+        if(err){
+            return done(err,false)
+        }
+        else if(user){
+            return done(null,user)
+        }
+        else{
+            user=new User({username:profile.displayName})
+            user.facebookId=profile.id //this is for the search to come true
+            user.firstName=profile.name.givenName;
+            user.lastName=profile.name.familyName;
+            user.save((err,user)=>{
+                if(err){
+                    return done(err,false)
+                }
+                else if(user){
+                    return done(null,user)
+                }
+            })
+        }
+    })
+ }
+ 
+ ))

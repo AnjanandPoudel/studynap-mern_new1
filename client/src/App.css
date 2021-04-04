@@ -26,6 +26,12 @@ h1{
     
 }
 
+.mycard{
+    box-shadow: 0 1px 2px 1px rgb(238, 237, 237);
+    background: rgb(255, 255, 255);
+    height: 70px;
+}
+
 .footer{
     text-align: center;
     background: rgb(162, 162, 162);
