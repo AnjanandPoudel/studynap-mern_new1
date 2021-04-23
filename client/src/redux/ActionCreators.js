@@ -8,7 +8,6 @@ export const add_comment=(comment )=>({
     // now send it to store via Comments_reducers
 })
 
-
 export const postComments=( c,r,comment,author )=>(dispatch)=>{
     let ourdata={
         course:c,
@@ -18,8 +17,7 @@ export const postComments=( c,r,comment,author )=>(dispatch)=>{
     }
     console.log(ourdata)
     ourdata.date=new Date().toISOString();
-
-    let bearer='bearer '+localStorage.getItem('token') 
+    let bearer='bearer '+localStorage.getItem('token')
 /*     return axios.post(baseurl+'courses',ourdata)
  */
     return axios({
@@ -28,7 +26,6 @@ export const postComments=( c,r,comment,author )=>(dispatch)=>{
         data:ourdata,
         headers:{
             Authorization:bearer,
-
         }
       })
     .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
@@ -37,40 +34,38 @@ export const postComments=( c,r,comment,author )=>(dispatch)=>{
         dispatch(add_comment(res))
         fetchcomments()
     })
-    
     .catch(error=>{ console.log('Error  posting comments', error);
-        alert('Error posting comments: This may be an error from server ::::::::: '+error);
+        alert('Error posting comments: (You may be unauthorized)'+error);
     })
 }
 
 
-
-export const postCourses=(name,email,subject,descp,selectedfile)=>(dispatch)=>{
-    let ourdata={
-        videotitle:name,
-        email:email,
-        subject:subject,
-        description:descp,
-        image:selectedfile
-    }
-    ourdata.date=new Date().toISOString();
+export const postCourses=(formData)=>(dispatch)=>{
+  
 /*     return axios.post(baseurl+'courses',ourdata)
  */
-    return axios({
-        method: 'post',
-        url:baseurl+ 'courses',
-        data:ourdata,
-        headers:{
-            'Content-Type':'application/json'
-        },
-        credentials: 'same-origin'
-      })
-    .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
+let bearer='bearer '+localStorage.getItem('token') 
+
+return axios({
+    method: 'post',
+    url:baseurl+ 'upload',
+    data:formData,
+    headers:{
+        'Content-Type':'application/json',
+        Authorization:bearer
+    },
+    credentials: 'same-origin'
+  })
+  .then(res=>res.data )//either you should use small brackets to directly return or if u want to use curly bracket then you must write ''
     .then(res=>dispatch(add_course(res)))
     .catch(error=>{ console.log('Error  posting courses', error);
         alert('Error posting courses: This may be an error from server :::::::::===> '+error);
     })
+   
 }
+
+
+
 export const add_course=(course)=>({
     type:ActionType.ADD_COURSES,
     payload:course
@@ -104,8 +99,6 @@ export const add_course=(course)=>({
 export const loginUser=(creds)=>(dispatch)=>{
     //dispatching this to kick off the call to api says guru
     dispatch(request_login(creds))
-
-    console.log(creds)
     return axios({
         method:'post',
         url:baseurl+'users/login',
@@ -116,34 +109,51 @@ export const loginUser=(creds)=>(dispatch)=>{
     })
     .then(res=>res.data)
     .then(res=>{
-        console.log(res)
         if(res.success){
+            creds.password="notavailable"
             localStorage.setItem('token',res.token)
             localStorage.setItem('creds',JSON.stringify(creds))
             dispatch(success_login(res))
+
+
         }
         else{
-            console.log('Error ta xa')
+            console.log('Error ta xa res.success false/null')
         }
     })
+   
     .catch(err=>console.log(err+" ola ap  This is the error during login in user"))
 }
 
 export const request_login=(creds)=>({
     type:ActionType.REQUEST_LOGIN,
-    creds
+    payload:creds
 })
-
 export const success_login=(creds)=>({
     type:ActionType.REQUEST_SUCCESS,
     token:creds.token
 })
-
 export const failed_login=(creds)=>({
     type:ActionType.FAILED_LOGIN,
-    creds
+    payload:creds
 })
 
+
+export const logoutUser=()=>(dispatch)=>{
+    dispatch(request_logout())
+    localStorage.removeItem('token')
+    localStorage.removeItem('creds')
+    dispatch(logout_success())
+
+}
+export const request_logout=()=>({
+    type:ActionType.FAILED_LOGIN,
+    
+})
+export const logout_success=()=>({
+    type:ActionType.FAILED_LOGIN,
+    
+})
 
 
 
@@ -201,3 +211,69 @@ export const show_comments=(courses)=>({
     payload:courses
 })
 
+
+
+
+
+
+export const fetchUser=()=>(dispatch)=>{
+    dispatch(loading_user(true));
+    let bearer='bearer '+localStorage.getItem('token') 
+
+    return axios({
+        method: 'get',
+        url:baseurl+ 'users',
+        headers:{
+            Authorization:bearer,
+            'Content-Type':'application/json'
+        }
+      })
+    .then(res=>res.data)
+    .then(res=>{dispatch(show_users(res))
+        console.log(res)
+    })
+    .catch(err=>{dispatch(failed_users(err.message))})
+}
+export const loading_user=()=>({
+    type:ActionType.LOADING_USERS
+})
+export const failed_users=(e)=>({
+    type:ActionType.FAILED_USERS,
+    payload:e
+})
+export const show_users=(info)=>({
+    type:ActionType.SHOW_USERS,
+    payload:info
+})
+
+
+////////////////////////////////////////////////////////////////////////////
+
+export const putUserInfo =(data)=>(dispatch)=>{
+    dispatch(loading_updated_user());
+    let bearer='bearer '+localStorage.getItem('token') 
+
+    return axios({
+        method:"put",
+        data:data,
+        headers:{
+            Authorization:bearer,
+            'Content-Type':'application/json'
+        }
+    })
+    .then(res=>res.data)
+    .then(res=>console.log(res))
+    .catch(err=>alert(err))
+}
+
+export const loading_updated_user=()=>({
+    type:ActionType.LOADING_USERS
+})
+export const failed_updated_user=(e)=>({
+    type:ActionType.FAILED_USERS,
+    payload:e
+})
+export const show_updated_user=(info)=>({
+    type:ActionType.SHOW_USERS,
+    payload:info
+})

@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+import { Link } from 'react-router-dom';
 import {
     Collapse,
     Navbar,
@@ -47,20 +48,26 @@ class Header extends Component{
         console.log(this.state.modalOpen)
     }
     handleLogin(event){
-        this.toggleModal();
-        this.props.loginUser({username: this.username.value, password: this.password.value});
         event.preventDefault();
 
+        this.toggleModal();
+        console.log(this.username.value,this.password.value)
+        this.props.loginUser({username: this.username.value, password: this.password.value});
+
+    }
+    handleLogout=()=>{
+        this.props.logoutUser();
     }
 
     
     render(){
+        console.log(this.props)
         return(
             <div className="">
                 <Navbar color="dark" dark expand="md sm" >
                     <NavbarBrand href="/"> studynap </NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
-                    <Collapse isOpen={this.state.open} navbar className="navbarflex">
+                    <Collapse isOpen={this.state.open} navbar className="navbarflex" >
                         <Nav className="mr-5 "  navbar >
                             <NavItem>
                                 <NavLink href="/home">Home</NavLink>
@@ -91,11 +98,36 @@ class Header extends Component{
                             </UncontrolledDropdown>
                         </Nav>
                         <Nav navbar className=" ">
+                            {this.props.auth.is_auth
+                            ?
+                            <div className="">
+                                <NavItem className=" p-0">
+                                    <Link to="/user" className="">
+                                        <i className=" yesuser fa fa-user-circle"></i>
+                                    </Link>
+                            </NavItem>
+                            <span className=" abel username white"> {this.props.auth.userinfo.username} </span>
+                            </div>
+                            :
+                            <div className=""> 
+                                <NavItem>
+                                        <Link to="/">
+                                            <i className="bold notuser fa fa-user-times"></i>
+                                        </Link>
+                                </NavItem>                            
+                            </div>
+                            }
                             <NavItem>
                                 <NavLink>
-                                    <Button className=" bg-success" onClick={this.toggleModal}>Login  <span className=" fa fa-sign-in fa-lg"></span></Button>
+                                    {this.props.auth.is_auth?
+                                    <Button className=" bg-success" onClick={this.handleLogout}>Logout  <span className=" fa fa-sign-in fa-lg"></span></Button>
+                                    :
+                                    <Button className=" bg-warning" onClick={this.toggleModal}>Login  <span className=" fa fa-sign-in fa-lg"></span></Button>
+                                    }
+
                                 </NavLink>
                             </NavItem>
+                           
                         </Nav>
                     </Collapse>
                 </Navbar>
@@ -105,7 +137,7 @@ class Header extends Component{
                 <Modal isOpen={this.state.modalOpen} toggle={this.toggleModal} className="loginmodal">
                     <ModalHeader className="m-1" toggle={this.toggleModal}>Login</ModalHeader>
                     <ModalBody className="m-4">
-                        <Form   onSubmit={this.handleLogin}>
+                        <Form   onSubmit={ (value)=> this.handleLogin(value)}>
                             <FormGroup>
                                 <Label htmlFor="username">Username:</Label>
                                 <Input type="text" id="username" name="username" placeholder="username" innerRef={(input)=>this.username=input} />

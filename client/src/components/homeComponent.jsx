@@ -96,21 +96,33 @@ import { Loading } from "./Loading"
 
 
 function Videocard(props){
+  console.log(props.item)
   return(
-    <a href="/" className="card m-1 cardCourse">
-      <div className="homeimagediv">
-        <img controls className="homeimage" controlsList="nodownload" id="videoPlayer" src={ baseurl + props.item.image} alt="pic"/>
-      </div>
-       <div className="cardContents d-flex justify-content-between">
-          <span className="smalltext">{props.item.Likes} <i className="fa fa-thumbs-up  "></i> </span>
-            <span className="stars">{props.item.Rate} <i className="fa fa-star yellow"></i> </span>
-            
-        </div>
-        <div className="p-2">
-            <p className="m-0 bold">{props.item.videotitle}</p>
-            <p className="smalltext"> {props.item.description} </p>
-        </div>
-  </a>
+  
+
+         <div  className="card m-1 cardCourse">
+                <div className="homeimagediv">
+                    <img  controlsList="nodownload" className="homeimage"  src={baseurl+props.item.image} alt="pic"/>
+                </div>
+                <div className="cardContents d-flex justify-content-between">
+                 <span className="smalltext">{props.item.Likes} <i className="fa fa-thumbs-up  "></i> </span>
+                   <span className="stars smalltext">{props.item.Rate} <i className="fa fa-star yellow"></i> </span>
+                   <span className="stars smalltext">Grade: {props.item.grade}  </span>
+
+                    
+                </div>
+                <div className="p-2 cardContents ">
+                   <div className="">
+                   <p className="m-0 bold">{props.item.name}</p>
+                   <p className="m-0 smalltext ">Author: {props.item.author.username}</p>
+                   <p className="m-0 smalltext">Subject: {props.item.subject}</p>
+
+                   </div>
+                  
+                </div>
+            </div>
+
+  
   )
 }
 

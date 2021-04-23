@@ -9,6 +9,12 @@ let cors=require('../cors');
 let authenticate=require('../../authenticate');
 let createdAt=new Date()
 
+let uploadRouter=require('./uploadrouter')
+
+/* let routerapp=express()
+routerapp.use('/upload',uploadRouter); */
+
+
 router.route('/')
 .options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200)})
 .get(cors.cors,(req,res,next)=>{
@@ -21,7 +27,7 @@ router.route('/')
     },err=>next(err))
     .catch(err=>next(err))
 })
-.post(cors.corsWithOptions,authenticate.verifyUser ,(req,res,next)=>{
+/* .post(cors.corsWithOptions,authenticate.verifyUser ,(req,res,next)=>{
   req.body.author=req.user._id;
   courseModels.create(req.body)
   .then((course)=>{
@@ -35,8 +41,7 @@ router.route('/')
     .catch(err=>next(err))
   },err=>next(err))
   .catch(err=>next(err))
-
-})
+}) */
 
 /*
 .post(cors.cors,(req,res,next)=>{

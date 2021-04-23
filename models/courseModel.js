@@ -2,25 +2,29 @@ const mongoose=require('mongoose');
 /* videotitle:name,
 email:email,
 subject:subject,
-description:descp,
+description:descp, 
 image:selectedfile */
 
 let CourseModel=new mongoose.Schema({
-    videotitle:{
+    name:{
         type:String,
-        default:'Anjan'
+        default:'Videotitle '
     },
     description:{
         type:String,
         default:'This section contains description '
     },
+    subject:{
+        type:String,
+        default:'This section contains subject '
+    },
     Rate:{
         type:Number,
-        default:3
+        default:0
     },
     Likes:{
         type:Number,
-        default:78
+        default:0
     },
     author:{
         type:mongoose.Schema.Types.ObjectId,
@@ -32,7 +36,15 @@ let CourseModel=new mongoose.Schema({
     },
     image:{
         type:String,
-        default:"images/p.png"
+        default:'assets/way.jpg'
+    },
+    video:{
+        type:String,
+        default:'videos/acer.mp4'
+    },
+    grade:{
+        type:String,
+        default:'11'
     }
 })
 
