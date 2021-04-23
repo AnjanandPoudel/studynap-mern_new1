@@ -15,7 +15,40 @@ let User=new mongoose.Schema({
         type:Boolean,
         default:false
     },
-    facebookId:String
+    facebookId:String,
+    email:{
+        type:String,
+        default:"annkjn@gmail.com"
+    },
+    address:{
+        type:String,
+        default:"lekhnath -31 "
+    },
+    contactNo:{
+        type:String,
+        default:"980590099"
+    },
+    workAt:{
+        type:String,
+        default:"Student"
+    },
+    Education:{
+        type:String,
+        default:"Bachelor 1st year"
+    },
+    EducationPlace:{
+        type:String,
+        default:"lamachaur WRC"
+    },
+    academicDetail:{
+        type:String,
+        default:" Slc from gogan, +2 from gogan, bach from wrc",
+    },
+    description:{
+        type:String,
+        default:" I will provide books for a very good prices. Contact me for books of Asmita publication."
+
+    }
 })
 
 //automatically add username and passwd

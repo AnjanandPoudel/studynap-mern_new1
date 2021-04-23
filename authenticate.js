@@ -8,9 +8,12 @@ let FacebookTokenStrategy=require('passport-facebook-token');
 let jwt=require('jsonwebtoken');
 let config=require('./config/keys')
 
+let fetch=require('node-fetch')
+
+let Strategy = require("passport-facebook");
 
 
-
+const FacebookStrategy = Strategy.Strategy;
 
 
 
@@ -24,7 +27,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // token is send using secretkey which expires in 3000 ms
 exports.getToken=(user)=>{
-    return(jwt.sign(user,config.secret_key,{expiresIn:3000}));
+    return(jwt.sign(user,config.secret_key,{expiresIn:300000}));
 }
 
 const optionsforJWTstrategy={}
@@ -55,7 +58,6 @@ exports.verifyUser=passport.authenticate('jwt',{session:false}) // automatically
 
 
 exports.verifyAdmin=(req,res,next)=>{
-   console.log(req.user)
    if(req.user.admin){
        next();
    }
@@ -77,12 +79,15 @@ exports.verifyAdminBoolean=(user)=>{
  
     }
  }
+
+
  
 
  exports.facebookPassport=passport.use(new FacebookTokenStrategy({
      clientID:config.facebook.clientId,
      clientSecret:config.facebook.clientSecret
  },(accessToken,refreshToken,profile,done)=>{
+     console.log(accessToken)
     User.findOne({facebookId:profile.id},(err,user)=>{
         if(err){
             return done(err,false)
@@ -108,3 +113,58 @@ exports.verifyAdminBoolean=(user)=>{
  }
  
  ))
+
+
+
+
+/* 
+ exports.facebookLogin=(req,res)=>{
+     const {userID,accessToken}=req.body;
+
+    let urlGraphFacebook=`hrrps://graph.facebook.com/v2.11/${userID}/?fields=id,name,email&access_token=${accessToken}`
+    fetch(urlGraphFacebook,{
+        method:'GET'
+    })
+    .then(res=>{res.json()})
+    .then(res=>{})
+        const {email,name}=res;
+
+        User.findOne({email}).exec((err,user)=>{
+            if(err){
+                return res.status(400).json({
+                    error:"Something went wrong"
+                })
+            }
+            else if(user){
+                let token=this.getToken(user)
+            }
+        })
+ }
+
+ */
+
+
+/* 
+
+ passport.use(
+    new FacebookStrategy(
+      {
+        clientID: config.facebook.clientId,
+        clientSecret: config.facebook.clientSecret,
+        callbackURL: config.facebook.callback,
+        profileFields: ["email", "name"]
+      },
+      function(accessToken, refreshToken, profile, done) {
+        const { email, first_name, last_name } = profile._json;
+        const userData = {
+          email,
+          firstName: first_name,
+          lastName: last_name
+        };
+        new User(userData).save();
+        done(null, profile);
+      }
+    )
+  );
+
+ */

@@ -5,11 +5,12 @@ let Users=require('../models/usermodel');
 let passport =require('passport');
 let authenticate=require('../authenticate');
 const  cors  = require('./cors');
+const { facebook } = require('../config/keys');
 
 
 /* GET users listing. */
 router.get('/',cors.corsWithOptions,authenticate.verifyUser, function(req, res, next) {
-  if(!authenticate.verifyAdminBoolean){
+  if(authenticate.verifyAdminBoolean){
     Users.find({})
     .then(user=>{
       res.statusCode=200;
@@ -18,18 +19,36 @@ router.get('/',cors.corsWithOptions,authenticate.verifyUser, function(req, res, 
     })
   }
   else{
-    let err=new Error('I guess u are not authorized enough to pull out this request. Only Admins can do this. '+'(username: '+req.user.username+')')
+    let err=new Error('I guess u are not authorized enough to pull out this request. Only Admins can do this. '+'(username: '+req.user.username+')'+req.user)
     err.status=403;
     return next(err)
   }
  
 })
+
+router.delete('/',cors.corsWithOptions,authenticate.verifyUser, function(req, res, next) {
+  if(authenticate.verifyAdminBoolean){
+    Users.deleteMany({})
+    .then(user=>{
+      res.statusCode=200;
+      res.setHeader('Content-Type','application/json');
+      res.json(user)
+    })
+  }
+  else{
+    let err=new Error('I guess u are not authorized enough to pull out this request. Only Admins can do this. '+'(username: '+req.user.username+')'+req.user)
+    err.status=403;
+    return next(err)
+  }
+})
+
 router.route('/')
-.all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
+.all(cors.corsWithOptions,(req,res,next)=>{
   res.statusCode=403;
   res.setHeader('Content-Type','application/json');
   res.json({err:"Not available mate"})
 })
+
 
 
 router.post('/signup',cors.corsWithOptions,(req,res,next)=>{
@@ -66,21 +85,54 @@ router.post('/signup',cors.corsWithOptions,(req,res,next)=>{
   })
 })
 router.route('/signup')
-.all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
+.all(cors.corsWithOptions,(req,res,next)=>{
   res.statusCode=403;
   res.setHeader('Content-Type','application/json');
   res.json({err:"Not available mate"})
 })
 
 
-router.get('/facebook/token',cors.corsWithOptions, passport.authenticate('facebook-token'),(req,res,next)=>{
+router.get('/facebook/token',cors.corsWithOptions,passport.authenticate('facebook-token'),(req,res,next)=>{
+  if(req.user){
+    let token=authenticate.getToken({_id:req.user._id});
+    res.statusCode=200;
+    res.setHeader('Content-Type','application/json');
+    res.json({success:true,token:token,status:"You are logged in",user:req.user})
+  }
+  else{
+    res.statusCode=200;
+    res.setHeader('Content-Type','application/json');
+    res.json({success:false,status:"You are not logged in",user:req.body})
+  }
+})
+router.route('/facebook/token').all(cors.corsWithOptions,(req,res,next)=>{
+    res.statusCode=200;
+    res.setHeader('Content-Type','application/json');
+    res.json("error says backend 87 users")
+})
+
+/* 
+
+router.get('/facebook',cors.corsWithOptions,passport.authenticate('facebook'),(req,res,next)=>{
   if(req.user){
     let token=authenticate.getToken({_id:req.user._id});
     res.statusCode=200;
     res.setHeader('Content-Type','application/json');
     res.json({success:true,token:token,status:"You are logged in"})
   }
+  else{
+    res.statusCode=200;
+    res.setHeader('Content-Type','application/json');
+    res.json({success:false,status:"You are not logged in",user:req})
+  }
 })
+router.route('/facebook/token').all(cors.corsWithOptions,(req,res,next)=>{
+    res.statusCode=200;
+    res.setHeader('Content-Type','application/json');
+    res.json("error says backend 87 users")
+})
+
+ */
 
 
 router.post('/login',cors.corsWithOptions,passport.authenticate('local'),(req,res)=>{
@@ -95,7 +147,6 @@ router.post('/login',cors.corsWithOptions,passport.authenticate('local'),(req,re
 })
 router.route('/login')
 .all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
-  
   res.statusCode=403;
   res.setHeader('Content-Type','application/json');
   res.json({err:"Not available mate"})
@@ -103,7 +154,7 @@ router.route('/login')
 
 
 
-router.post('/l',cors.corsWithOptions,(req,res)=>{
+/* router.post('/l',cors.corsWithOptions,(req,res)=>{
   console.log('hello')
   res.statusCode=200
   res.setHeader('Content-Type','application/json');
@@ -118,7 +169,7 @@ router.route('/l')
   res.setHeader('Content-Type','application/json');
   res.json({err:"Not available mate"})
 })
-
+ */
 
 router.route('/logout')
 .all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
@@ -126,5 +177,49 @@ router.route('/logout')
   res.setHeader('Content-Type','application/json');
   res.json({err:"Not available mate"});
 })
+
+
+
+
+
+
+router.get('/:userId',cors.corsWithOptions,authenticate.verifyUser, function(req, res, next) {
+  if(authenticate.verifyAdminBoolean){
+    Users.findById(req.params.userId)
+    .then(user=>{
+      res.statusCode=200;
+      res.setHeader('Content-Type','application/json');
+      res.json(user)
+    })
+  }
+  else{
+    let err=new Error('I guess u are not authorized enough to pull out this request. Only Admins can do this. '+'(username: '+req.user.username+')'+req.user)
+    err.status=403;
+    return next(err)
+  }
+})
+router.route('/:userId')
+.delete(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
+  if(authenticate.verifyAdminBoolean){
+    Users.findByIdAndRemove(req.params.userId)
+    .then(user=>{
+      res.statusCode=200;
+      res.setHeader('Content-Type','application/json');
+      res.json(user)
+    })
+  }
+  else{
+    let err=new Error('I guess u are not authorized enough to pull out this request. Only Admins can do this. '+'(username: '+req.user.username+')'+req.user)
+    err.status=403;
+    return next(err)
+  }
+})
+.all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
+  res.statusCode=403;
+  res.setHeader('Content-Type','application/json');
+  res.json({err:"Not available mate"})
+})
+
+ 
 
 module.exports = router;

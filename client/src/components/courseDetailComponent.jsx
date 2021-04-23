@@ -52,7 +52,7 @@ class CourseDetail extends Component{
             <div className="d-flex flex-wrap m-1">
                 {/* props is supplied from main */}
                 <CoursekoDetail course={this.state.onecourse} onClick={this.likehandleClick} errmsg={this.props.errmsg} Loading_courses={this.props.Loading_courses}  />
-                <Comment course={this.props.course} comments={this.props.comments} add_comments={this.props.add_comments} author="anjan" failed_comments={this.props.failed_comments} Loading_comments={this.props.Loading_courses} />
+                <Comment course={this.props.course} comments={this.props.comments} add_comments={this.props.add_comments}  failed_comments={this.props.failed_comments} Loading_comments={this.props.Loading_courses} />
             </div>
             )
         }
@@ -98,20 +98,22 @@ videotitle: "Anjan"
         console.log(props.course)
 
         return(
-            <div  className="card m-1 cardCourse col-sm-12 col-md-6 col-lg-4">
-                <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={baseurl+ props.course.image} alt="pic"/>
+            <div  className="card m-1 cardVideo col-sm-12 col-md-6 col-lg-5">
+                <div className="homevideodiv">
+                    <video controls controlsList="nodownload" className="homevideo" id="videoPlayer" src={baseurl+props.course.video} alt="pic"/>
                 </div>
-                <div className="cardContents d-flex justify-content-between">
-                <span className="smalltext">{props.course.Likes} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue boxy" id="likeCourse"></i> </span>
-                    <span className="stars boxy">{props.course.Rate}   <i className="fa fa-star yellow starCourse"></i> </span>
+                <div className="cardContents mt-1 d-flex justify-content-between">
+                <span className="smalltext">{props.course.Likes} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue " id="likeCourse"></i> </span>
+                    <span className="stars">Rating: {props.course.Rate}<i className="fa fa-star yellow starCourse"></i> </span>
+                    <p className="smalltext bold">Grade : {props.course.grade?props.course.grade:'grade'} </p>
+
                     
                 </div>
-                <div className="p-2">
+                <div className="p-1">
                     <p className="m-0 bold">{props.course.videotitle}</p>
-                    <p className="m-0 ">Author: {props.course.author.username}</p>
-
-                    <p className="smalltext"> {props.course.description} </p>
+                    <p className="m-0 bold">Author: {props.course.author.username}</p>
+                    <p className="smalltext"> {/* <h6>Description</h6> */}{props.course.description} </p>
+                    
                 </div>
             </div>
         )
@@ -156,14 +158,26 @@ function Comment(props){
 
     else if(props.comments){
         let commentarr=props.comments.map(item=>{
-            console.log(item)
+            item.createdAt=item.updatedAt.toString()
+            
+
+            function formatDate(string){
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return new Date(string).toLocaleDateString([],options);
+            }
+             
+            item.createdAt= formatDate(item.createdAt);
+            let presentDate
+            
+
             return(
                 <div className="" key={item._id}>
-                    <div className="p-0 mycard">
-                        <div className="d-flex justify-content-between flex-wrap m-2">
+                    <div className="p-0 mycard "> 
+                        <div className="d-flex justify-content-between flex-wrap m-1">
                             <span className="smalltext bold" > {item.author.username}</span> 
                             <span className="smalltext"> {item.rating} <i className="fa fa-star yellow"></i> </span> <br/>
-                            <span className="smalltext m-0 ">{/* split("T")[0] */}</span> 
+                            <span className="smalltext m-0 ">{item.createdAt}</span> 
+
                         </div>
                         <div className="">
                             <span className="  pl-5 m-1 smalltext ">  {item.comment} </span> <br/>
@@ -181,6 +195,7 @@ function Comment(props){
         }
         return(
             <div  className=" col-sm-12 col-md-6 col-lg-6">
+                <p className="smalltext">Don't write comment while watching video. We will fix this problem soon .</p>
                 <h4>Comments : </h4>
                 {commentarr}
                 
@@ -218,8 +233,8 @@ class CommentForm extends Component{
             <div className="comment-form">
                 <LocalForm  onSubmit={(values)=> {this.handleClick(values) }} className="form m-1">
                     <div className="form-group">
-                    <Control.textarea className="form-control" type="textarea" row={4} placeholder="Add Comments here" model=".comment"  name="comment" value={this.state.comment} onChange={this.handleChange} />
-                    <Control.input type="number" name="rate" id="rate" onChange={this.handleChange} max="10"  model=".Rate" placeholder="Rate from 1 to 10 stars"  value={this.state.rate} />
+                    <Control.Textarea className="form-control" type="textarea" row={4} placeholder="Add Comments here" model=".comment"  name="comment" value={this.state.comment} onChange={this.handleChange} required/>
+                    <Control.Input type="number" name="rate" id="rate" onChange={this.handleChange} max="10"  model=".rate" placeholder="Rate from 1 to 5 stars"  value={this.state.rate} required/>
 
                     <Button type="submit" className="btn btn-secondary">  Submit</Button>
                     </div>

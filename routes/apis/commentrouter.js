@@ -25,7 +25,6 @@ router.route('/')
         .then(comment=>{
            Comments.findById(comment._id)
            .populate('author')
-           .populate('course')
            .then(commentinfo=>{
                 res.statusCode=200;
                 res.setHeader('Content-Type','application/json');

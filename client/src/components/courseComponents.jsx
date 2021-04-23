@@ -1,7 +1,7 @@
 import { Component } from "react"
 import { Link, } from "react-router-dom"
-import { Modal, ModalBody, ModalHeader } from 'reactstrap'
-import { baseurl } from "../redux/baseURL"
+import { Modal, ModalBody, ModalHeader,UncontrolledDropdown,DropdownMenu,DropdownItem,DropdownToggle } from 'reactstrap'
+import { baseurl, dataurl } from "../redux/baseURL"
 import { Loading } from "./Loading"
 import axios from 'axios'
 
@@ -23,10 +23,20 @@ class Courses extends Component{
     constructor(props){
         super(props)
         this.state={
+            editToogle:false
         }
     }
+
+
+  
+
+    
+   
     
     render(){
+     
+
+        
         if(this.props.Loading_courses){
            return(
                <div className="">
@@ -49,26 +59,54 @@ class Courses extends Component{
                             failed to fetch
                         </div>
                     </div> 
+                    <div className="col-10 col-sm-6 col-md-4 col-lg-3 addcard">
+                            <AddCourse add_courses={this.props.add_courses} />
+                        </div>
                 </div>
             )
         }
         else if(this.props.courses){
             let  menu=this.props.courses.map(course=>{
                 return(
-                  <div    /*  onClick={()=>this.props.onClick(course.id)} */   className=" cardsInCourse" key={course._id}>
-                      <Link to={`/courses/${course._id}`} >
+                  <div    /*  onClick={()=>this.props.onClick(course.id)} */   className="cardsInCourse" key={course._id}>
                         <RenderCourse course={course}/>
-                      </Link>
                   </div>
                 )
              })
                 return(
                     <div className="">
-                        <div className="container-fluid pt-5 bg-course">
+                        <div className="container-fluid bg-course">
                             <div className="row">
                                 <div className="bg-course col-12 ">
-                                    <div className="m-3 cards   d-flex flex-wrap">
-                                        {menu}
+                                    <div className="">
+                                        <SearchComponent />
+                                    </div>
+                                    <div className="d-flex flex-wrap">
+                                        <div className="cards d-flex flex-wrap col-9">
+                                            {menu}
+                                        </div>
+                                        <div className="popular-posts col-md-3">
+                                            <h5>POPULAR POSTS:</h5>
+                                            <div className="">
+                                                <img src="images/q.jpg" alt=""/>
+                                                <div className="popularimagebelow">
+                                                    <span className="d-flex">
+                                                        <i className="fa fa-like"></i>
+                                                        <i className="fa fa-like"></i>
+
+
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <p className="abel">
+                                                This is something that i dearmed of :
+                                                <br/>
+                                                <span className="smalltext">
+                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, porro?
+                                                </span>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -90,31 +128,72 @@ class Courses extends Component{
     
 }
 
+class SearchComponent extends Component {
+    constructor(){
+        super()
+        this.state={
 
-function RenderCourse(props){
-    if(props.course){
-        console.log(props.course);
+        }
+    }
+
+    render(){
         return(
-            <div  className="card m-1 cardCourse">
-                <div className="homeimagediv">
-                    <img controls controlsList="nodownload" className="homeimage" id="videoPlayer" src={baseurl+props.course.image} alt="pic"/>
-                </div>
-                <div className="cardContents d-flex justify-content-between">
-                 <span className="smalltext">{props.course.Likes} <i className="fa fa-thumbs-up  "></i> </span>
-                   <span className="stars">{props.course.Rate} <i className="fa fa-star yellow"></i> </span>
-                    
-                </div>
-                <div className="p-2">
-                    <p className="m-0 bold">{props.course.videotitle}</p>
-                    <p className="smalltext"> {props.course.description} </p>
-                </div>
+            <div className="search-box">
+                <input type="text"  placeholder="Search by id/name" name="Search" />
+                <button className="btn button" type="submit">Search</button>
             </div>
         )
     }
-    else{
-        return(
-            <div className="">no course detail</div>
-        )
+}
+
+
+class RenderCourse extends Component {
+    render(){
+        if(this.props.course){
+            console.log(this.props.course);
+            return(
+                <div  className=" m-1 cardCourse">
+                    <div className="homeimagediv">
+                        <div className="d-flex justify-content-between">
+                            <div className="">
+                                
+                            </div>  
+                        </div>
+                        <Link to={`/courses/${this.props.course._id}`} >
+                            <img  controlsList="nodownload" className="homeimage"  src={baseurl+this.props.course.image} alt="pic"/>
+                        </Link>
+                       
+                    </div>
+    
+                    
+                    <div className="cardContents d-flex justify-content-between">
+                    <p className="ml-1 bold">{this.props.course.name?this.props.course.name:'lore kjndfkja kj afkj afkj akjf  Ap'}</p>      
+                    <br/>
+                     <span className="smalltext abel">{this.props.course.Likes} <i className="fa fa-eye  "></i> </span>
+                       <span className="stars smalltext">{this.props.course.Rate} <i className="fa fa-star yellow"></i> </span>
+                       <span className=" smalltext">Grade: {this.props.course.grade}  </span>
+    
+                        
+                    </div>
+                    <div className="p-2 cardContents d-flex justify-content-between">
+                       <div className="">
+                        <p className="smalltext"> {this.props.course.description} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus, nihil. </p>
+                        <div className="d-flex justify-content-between">
+                            <p className=" smalltext "> Subject:{this.props.course.subject}</p>
+                          
+                            
+                        </div>
+                       </div>
+                    </div>
+                   
+                </div>
+            )
+        }
+        else{
+            return(
+                <div className="">no course detail</div>
+            )
+        }
     }
 }
 
@@ -158,13 +237,65 @@ class AddCourse extends Component{
             modelopen:!this.state.modelopen
         })
     }
+
+
+    handleSubmitRedux = (event) => {
+        event.preventDefault();
+        console.log(this.state.selectedfile)
+        this.handletoggle();
+        let filename=this.state.selectedfile.name;
+        let createdat=new Date().toISOString();
+        filename=createdat+'___'+filename
+        console.log(filename)
+        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,this.state.selectedfile);
         
+    }
+
+
     handleSubmit = (event) => {
         event.preventDefault();
         console.log(this.state.selectedfile)
         this.handletoggle();
-        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,'images/way.jpg');
- 
+       /*  let filename=this.state.selectedfile.name;
+        let createdat=new Date().toISOString();
+        filename=createdat+'___'+filename
+        console.log(filename)
+        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,filename); */
+        
+        let formData =new FormData();
+        formData.append('selectedfile',this.state.selectedfile);
+        formData.append('name',this.state.name);
+        formData.append('email',this.state.email);
+        formData.append('subject',this.state.subject);
+        formData.append('description',this.state.description);
+        this.props.add_courses(formData);
+
+       /*  let bearer='bearer '+localStorage.getItem('token') 
+
+        return axios({
+            method: 'post',
+            url:baseurl+ 'upload',
+            data:formData,
+            headers:{
+                'Content-Type':'application/json',
+                Authorization:bearer
+            },
+            credentials: 'same-origin'
+          })
+        .then(res=>{
+           return res.data
+        })
+        .then(
+            res=>{
+                console.log(res)
+                window.location.reload()
+
+            }
+        )
+        .catch(err=>{
+            console.log(err)
+        })
+         */
     }
   
      

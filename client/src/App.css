@@ -1,12 +1,39 @@
+.usercard{
+    background: rgb(218, 218, 218);
+    color:rgb(106, 106, 106) !important;
+}
+.username{
+    color: white;
+    font-size: 12px;
+}
+.yesuser{
+    color: rgb(52, 186, 96);
+    font-size: 2rem;
+
+}
+.notuser{
+    color: white;
+    font-size: 2rem;
+}
+.white{
+    color: white !important;
+}
+
 .navbarflex{
     display: flex;
     justify-content: space-around;
     margin: 0 0rem 0 35%;
 }
 .bold{
-    font-weight: bolder;
-    margin: 0.5rem 1rem -0.5rem 1rem;
+    font-weight: bold;
 }
+.big{
+    font-size: 1.3rem;
+}
+.mid{
+    font-size: 1.1rem;
+}
+
 
 .red{
     color: red;
@@ -16,6 +43,12 @@
     color: green;
 }
 
+.cardCourse{
+    box-shadow: 0px 3px 3px rgb(220, 220, 220);
+    border: 1px solid rgb(243, 243, 243);
+}
+
+
 h1{
     position: relative;
     margin: 3rem;
@@ -23,14 +56,54 @@ h1{
 
 .failed_to_fetch{height: 250px;
     margin: 1rem;
-    
 }
+.homevideodiv{
+    height: 400px;
+    background: #000;
+}
+.homevideo{
+    width: 100%;
+    height: 350px;
+}
+.cardVideo{
+    min-height: 400px;
+
+}
+.editdropdown{
+    background: rgb(255, 255, 255);
+    border: 0px; 
+    margin: 0;
+    padding: 0 4px;
+    color: #000;
+    border-radius: 0;
+}
+
 
 .mycard{
     box-shadow: 0 1px 2px 1px rgb(238, 237, 237);
     background: rgb(255, 255, 255);
     height: 70px;
 }
+
+.userimageround{
+    margin: 1rem;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius:50% ;
+    background-size: cover;
+    background: #000;
+}
+
+.userimageround img{
+    margin: 20% 0;
+    transform: scale(1.4);
+    width: 100%;
+    
+}
+
+
+
 
 .footer{
     text-align: center;
@@ -42,3 +115,18 @@ h1{
     color: #000;
 }
 
+
+@media (max-width: 380px){
+    .cardsInCourse {
+        flex: 0 0 22%;
+        margin:0%;
+        /* max-width: 25%; */
+    }
+    .cards{
+        margin: 0 !important;
+    }
+    .cardCourse{
+        margin: 0 !important;
+    }
+    
+}
