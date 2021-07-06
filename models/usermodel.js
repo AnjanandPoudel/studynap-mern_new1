@@ -48,6 +48,10 @@ let User=new mongoose.Schema({
         type:String,
         default:" I will provide books for a very good prices. Contact me for books of Asmita publication."
 
+    },
+    image:{
+        type:String,
+        default:'assets/way.jpg'
     }
 })
 

@@ -1,24 +1,20 @@
-import {Button, Form, Input,Row,Col,Label} from 'reactstrap'
+import {Button, Form, Input,Row,Col,Label, ModalFooter, Modal, ModalHeader, ModalBody} from 'reactstrap'
 import React, { Component } from 'react';
 import { Loading } from './Loading';
+import PopularPosts from '../composmall/popularposts';
 import { baseurl } from '../redux/baseURL';
 import { Control, LocalForm } from 'react-redux-form';
-
-
-
+import { putCourses } from '../redux/ActionCreators';
 
 
 
 class CourseDetail extends Component{
-
     constructor(props){
         super(props)
         this.state={
             onecourse:props.course, // this should be changed just an eg;
             likes:false,
             likeIncreased:'',
-           
-
         }
         this.likehandleClick=this.likehandleClick.bind(this)
     }
@@ -44,22 +40,38 @@ class CourseDetail extends Component{
             console.log('no')
         }
     }
-   
+
+
+  
+
     render(){
         console.log(this.props)
         if(true){
             return(
-            <div className="d-flex flex-wrap m-1">
+            <div className="m-1">
                 {/* props is supplied from main */}
-                <CoursekoDetail course={this.state.onecourse} onClick={this.likehandleClick} errmsg={this.props.errmsg} Loading_courses={this.props.Loading_courses}  />
-                <Comment course={this.props.course} comments={this.props.comments} add_comments={this.props.add_comments}  failed_comments={this.props.failed_comments} Loading_comments={this.props.Loading_courses} />
+               <div className="d-flex">
+                <CoursekoDetail course={this.state.onecourse} onClick={this.likehandleClick} errmsg={this.props.errmsg} Loading_courses={this.props.Loading_courses} putCourses={this.props.putCourses} putCourseThumbnail={this.props.putCourseThumbnail} 
+                deleteCourse={this.props.deleteCourse}
+                
+                />
+                <PopularPosts />
+               </div>
+                <Comment course={this.props.course} comments={this.props.comments} onClick={this.likehandleClick} 
+                add_comments={this.props.add_comments}  failed_comments={this.props.failed_comments} 
+                Loading_comments={this.props.Loading_courses}
+                deleteComment={this.props.deleteComment}
+                />
             </div>
             )
         }
     }
 }
 
+
 function CoursekoDetail(props){
+  
+
     if(props.Loading_courses){
         return(
             <div className="m-5 col-5 p-5">
@@ -83,7 +95,6 @@ function CoursekoDetail(props){
         )
     }
 
-    
 /* 
     Likes: 78
 Rate: 3
@@ -95,25 +106,33 @@ videotitle: "Anjan"
 */
     
     else if(props.course){
-        console.log(props.course)
+        console.log(props)
+
+        const handleDelete=()=>{
+        props.deleteCourse(props.course._id)
+        console.log("delete")
+    }
 
         return(
-            <div  className="card m-1 cardVideo col-sm-12 col-md-6 col-lg-5">
+            <div  className="card m-1 cardVideo col-sm-12 col-md-8 col-lg-8">
                 <div className="homevideodiv">
                     <video controls controlsList="nodownload" className="homevideo" id="videoPlayer" src={baseurl+props.course.video} alt="pic"/>
                 </div>
-                <div className="cardContents mt-1 d-flex justify-content-between">
+                <div className="cardContents mt-1 p-1 d-flex justify-content-between">
                 <span className="smalltext">{props.course.Likes} <i onClick={()=>props.onClick()}  className="fa fa-thumbs-up blue " id="likeCourse"></i> </span>
                     <span className="stars">Rating: {props.course.Rate}<i className="fa fa-star yellow starCourse"></i> </span>
                     <p className="smalltext bold">Grade : {props.course.grade?props.course.grade:'grade'} </p>
-
-                    
+                    <Edit course={props.course} putCourses={props.putCourses} /> 
+                    <Thumbnail  course={props.course} putCourseThumbnail={props.putCourseThumbnail}  /> 
                 </div>
                 <div className="p-1">
-                    <p className="m-0 bold">{props.course.videotitle}</p>
-                    <p className="m-0 bold">Author: {props.course.author.username}</p>
-                    <p className="smalltext"> {/* <h6>Description</h6> */}{props.course.description} </p>
-                    
+                    <p className="m-0 bold w80">{props.course.name}</p>
+                    <div className="d-flex justify-content-between">
+                        <p className="m-0 bold">Author: {props.course.author.username}</p>
+                        <p className="m-0 bold">Subject: {props.course.subject}</p>
+                    </div>
+                    <p className="smalltext w80"> {/* <h6>Description</h6> */}{props.course.description} </p>
+                    <span href="" onClick={handleDelete} className="red float-right"><i className="fa fa-trash big"> <span className="hel smalltext">Delete</span> </i></span>
                 </div>
             </div>
         )
@@ -136,9 +155,154 @@ videotitle: "Anjan"
     }
 }
 
+class Thumbnail extends Component{
+    constructor(){
+        super()
+        this.state={
+            Open:false,
+            selectedfile:''
+            }
+        }
+
+        handleChange=()=>{
+            this.setState({
+                Open:!this.state.Open,
+            })
+        }
+
+        handleChangefile=(event)=>{
+            this.setState({
+                selectedfile:event.target.files[0]
+            })
+        }
+
+  /*       handleSubmit=(values)=>{     
+            this.handleChange()
+            values=JSON.stringify(values)
+            console.log(values)
+
+        } */
+
+        handleSubmit = (event) => {
+            console.log(this.state.selectedfile)
+            this.handleChange();
+        
+            let formData =new FormData();
+            formData.append('selectedfile',this.state.selectedfile);
+/*             this.props.add_coursethumbnail(formData);
+ */           console.log(formData)
+            console.log(this.props.course._id)
+            this.props.putCourseThumbnail(formData,this.props.course._id)
+
+        }
+
+        render(){
+            return(
+                <div className="">
+                    <div className="thumbnailimage">
+                        <img src={baseurl+this.props.course.image} alt="" />
+                    </div>
+                    <Button onClick={this.handleChange} className=" btn btn-warning">Add Thumbnail</Button>
+
+
+                    <Modal isOpen={this.state.Open} toggle={this.handleChange}>
+                        <ModalHeader toggle={this.handleChange}>
+                            Add thumbnail
+                        </ModalHeader>
+                        <ModalBody>
+                            <LocalForm onSubmit={(values)=>{this.handleSubmit(values)}} className="form" >
+                                <div className="form-group ">
+                                    <Label md={8} htmlFor="name " > Choose thumbnail/image(png/jpg/jpeg/gif) </Label>
+                                    <Col>
+                                        <Control.file model=".file" md={10} className="form-control btn-warning" placeholder={this.props.course?this.props.course.name:null} onChange={this.handleChangefile}  />
+                                    </Col>
+                                </div>
+
+                                <Button className="btn btn-success text-center " >Submit</Button>
+                            </LocalForm>
+                        </ModalBody>
+                    </Modal>
+                </div>
+            )
+        }
+
+}
+
+class Edit extends Component{
+    constructor(){
+        super()
+        this.state={
+            Open:false
+            }
+        }
+
+        handleChange=()=>{
+            this.setState({
+                Open:!this.state.Open
+            })
+        }
+
+        handleSubmit=(values)=>{     
+            this.handleChange()
+            values=JSON.stringify(values)
+            console.log(this.props.course._id)
+            alert(values)
+            this.props.putCourses(values,this.props.course._id)
+
+        }
+
+        render(){
+            console.log(this.props)
+            return(
+                <div className="">
+                    <Button onClick={this.handleChange} className=" pl-5 pr-5 btn-danger">Edit</Button>
+                    
+                    <Modal isOpen={this.state.Open} toggle={this.handleChange}>
+                        <ModalHeader toggle={this.handleChange}>
+                            Edit the info:
+                        </ModalHeader>
+                        <ModalBody>
+                            <LocalForm onSubmit={(values)=>{this.handleSubmit(values)}} className="form" >
+                                <div className="form-group row">
+                                    <Label md={3} htmlFor="name" >Title Name</Label>
+                                    <Col>
+                                        <Control.text model=".name" className="form-control" placeholder={this.props.course?this.props.course.name:null}  />
+                                    </Col>
+                                </div>
+                                <div className="form-group row">
+                                    <Label htmlFor="grade" md={2}>Grade</Label>
+                                    <Col  md={10}>
+                                        <Control.text model=".grade" className="form-control" placeholder={this.props.course?this.props.course.grade:null}  />
+                                    </Col>
+                                </div>
+                                <div className="form-group row">
+                                    <Label htmlFor="subject" md={2}>Subject</Label>
+                                    <Col  md={10}>
+                                        <Control.text model=".subject" className="form-control" placeholder={this.props.course?this.props.course.subject:null}  />
+                                    </Col>
+                                </div>
+                                <div className="form-group row">
+                                    <Label htmlFor="description" md={2}>Description</Label>
+                                    <Col  md={10}>
+                                        <Control.text model=".description" className="form-control" placeholder={this.props.course?this.props.course.description:null}  />
+                                    </Col>
+                                </div>
+
+                                <Button className="btn btn-success text-center " >Submit</Button>
+                            </LocalForm>
+                        </ModalBody>
+                    </Modal>
+                    
+                </div>
+            )
+        }
+    
+}
+
 
 function Comment(props){
-    console.log(props)
+
+  
 
     if(props.Loading_comments){
         return(
@@ -167,21 +331,31 @@ function Comment(props){
             }
              
             item.createdAt= formatDate(item.createdAt);
-            let presentDate
             
+
+            const handleDelete=()=>{
+                console.log(item._id)
+                props.deleteComment(item._id)
+            }
 
             return(
                 <div className="" key={item._id}>
-                    <div className="p-0 mycard "> 
+                    <hr className="light" />
+                    <div className="p-0  "> 
                         <div className="d-flex justify-content-between flex-wrap m-1">
-                            <span className="smalltext bold" > {item.author.username}</span> 
-                            <span className="smalltext"> {item.rating} <i className="fa fa-star yellow"></i> </span> <br/>
+                            <div className="comment_username">
+                                <span className="smalltext bold" > {item.author.username}</span> 
+                                <span className="smalltext"> - {item.rating} <i className="fa fa-star yellow"></i> </span> <br/>
+                            </div>
+                            <span className="smalltext">{item.Likes} <i onClick={()=>props.onClick()}  className=" smalltext fa fa-thumbs-up blue " id=""></i> </span>
                             <span className="smalltext m-0 ">{item.createdAt}</span> 
-
+                            <span href="" onClick={handleDelete} className="red float-right"><i className="fa fa-trash mid"> <span className=" smalltext">Delete</span> </i></span>
                         </div>
-                        <div className="">
-                            <span className="  pl-5 m-1 smalltext ">  {item.comment} </span> <br/>
+                        <div className=" ml-5  pl-3 pr-1 user_comment">
+                            <span className="  smalltext hel ">  {item.comment} </span> <br/>
                         </div>
+                       
+                        
                         </div>
                 </div>
             )
@@ -189,17 +363,22 @@ function Comment(props){
         if(!props.course){
             return(
                 <div className="">
-                    NO course id
+                    No course id
                 </div>
             )
         }
         return(
-            <div  className=" col-sm-12 col-md-6 col-lg-6">
-                <p className="smalltext">Don't write comment while watching video. We will fix this problem soon .</p>
-                <h4>Comments : </h4>
-                {commentarr}
+            <div  className=" mt-5 col-sm-12 col-md-6 col-lg-6">
+                <hr />
+                <hr />
                 
+                <p className="smalltext abel">Don't write comment while watching video. We will fix this problem soon .</p>
+                <h5 className=" hel  bold">Comments Section </h5>
+                <hr className="light" />
                 <CommentForm  author={props.author} add_comments={props.add_comments} course={props.course._id} />
+                <br />
+                {commentarr}
+                <br />
             </div>
         )
     }
@@ -217,28 +396,25 @@ class CommentForm extends Component{
             author:props.author,
         }
     }
-    handleChange=(event)=>{
-        const target=event.target;
-        const name=target.name;
-        const value=target.type === "checkbox" ? target.checkbox : target.value;
-        this.setState({
-            [name]:value
-        })
-    }
-    handleClick=(event)=>{
-        this.props.add_comments(this.props.course,this.state.rate,this.state.comment,this.state.author);
+
+    handleClick=(values)=>{
+        console.log((values.comment))
+        this.props.add_comments(this.props.course,values.rate,values.comment,this.state.author);
     }
     render(){
         return(
             <div className="comment-form">
-                <LocalForm  onSubmit={(values)=> {this.handleClick(values) }} className="form m-1">
-                    <div className="form-group">
-                    <Control.Textarea className="form-control" type="textarea" row={4} placeholder="Add Comments here" model=".comment"  name="comment" value={this.state.comment} onChange={this.handleChange} required/>
-                    <Control.Input type="number" name="rate" id="rate" onChange={this.handleChange} max="10"  model=".rate" placeholder="Rate from 1 to 5 stars"  value={this.state.rate} required/>
-
-                    <Button type="submit" className="btn btn-secondary">  Submit</Button>
+                <LocalForm onSubmit={(values)=> {this.handleClick(values) }} className="d-flex flex-wrap form m-1">
+                    <div className="form-group col-sm-12 col-md-9">
+                    <label htmlFor="rate" className="bold">Add comment:</label>
+                        <Control.textarea className="form-control" type="textarea" rows={3} placeholder="Add new Comments here (required)" model=".comment"  required />
                     </div>
-
+                    <div className="form-group col-sm-6 col-md-3">
+                        <label htmlFor="rate" className="bold">Rating:</label>
+                        <Control.text className="form-control"  type="number"  placeholder="1 to 5(required)" model=".rate"   required />  
+                        <Button type="submit" className="m-1 pl-4 pr-5 btn btn-success">  Submit</Button>
+                  
+                    </div>
                 </LocalForm>
 {/* 
                 <LocalForm onSubmit={(values) => this.handleClick(values)}>

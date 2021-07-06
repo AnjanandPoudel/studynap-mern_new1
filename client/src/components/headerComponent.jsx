@@ -22,6 +22,7 @@ import {
     Label,
     Input
 } from 'reactstrap';
+import { baseurl } from '../redux/baseURL';
 import Oauth from './facebook';
 
 
@@ -59,27 +60,35 @@ class Header extends Component{
         this.props.logoutUser();
     }
 
+ 
     
     render(){
-        console.log(this.props)
+        console.log(this.props.userinformation)
         return(
             <div className="">
-                <Navbar color="dark" dark expand="md sm" >
+                <Navbar color="" dark expand="md sm" >
                     <NavbarBrand href="/"> studynap </NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.open} navbar className="navbarflex" >
                         <Nav className="mr-5 "  navbar >
                             <NavItem>
-                                <NavLink href="/home">Home</NavLink>
+                                <NavLink className="tooltipper" href="/home"> 
+                                 <i  className=" fa fa-home"></i>
+                                 <span className="tooltiptext"> Home</span>
+                                </NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="/courses">Courses</NavLink>
+                                <NavLink className="tooltipper" href="/courses"> 
+                                <span className="tooltiptext"> Courses</span>
+                                 <i className="fa fa-book"></i></NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="/contact">Contact</NavLink>
+                                <NavLink className="tooltipper" href="/contact"> 
+                                <span className="tooltiptext">Contact</span>
+                                <i className="fa fa-address-card"></i></NavLink>
                             </NavItem>
                             
-                            <UncontrolledDropdown nav inNavbar> 
+                          {/*   <UncontrolledDropdown nav inNavbar> 
                                 <DropdownToggle nav caret>
                                     Options
                                 </DropdownToggle>
@@ -95,17 +104,18 @@ class Header extends Component{
                                     Reset
                                     </DropdownItem>
                                 </DropdownMenu>
-                            </UncontrolledDropdown>
+                            </UncontrolledDropdown> */}
                         </Nav>
                         <Nav navbar className=" ">
                             {this.props.auth.is_auth
                             ?
                             <div className="">
-                                <NavItem className=" p-0">
-                                    <Link to="/user" className="">
-                                        <i className=" yesuser fa fa-user-circle"></i>
-                                    </Link>
-                            </NavItem>
+                                <NavItem className=" smalluserimage p-0">
+                                    {this.props.userinformation? <Link to="/user" className="">
+                                        <img className="userimage " src={baseurl+this.props.userinformation.image} alt="pp"/>
+                                    </Link>:
+                                    <div className=""></div> }
+                                </NavItem>
                             <span className=" abel username white"> {this.props.auth.userinfo.username} </span>
                             </div>
                             :
@@ -120,9 +130,9 @@ class Header extends Component{
                             <NavItem>
                                 <NavLink>
                                     {this.props.auth.is_auth?
-                                    <Button className=" bg-success" onClick={this.handleLogout}>Logout  <span className=" fa fa-sign-in fa-lg"></span></Button>
+                                    <Button className=" bg-secondary  ml-3" onClick={this.handleLogout}>Logout  <span className=" fa fa-sign-in fa-lg"></span></Button>
                                     :
-                                    <Button className=" bg-warning" onClick={this.toggleModal}>Login  <span className=" fa fa-sign-in fa-lg"></span></Button>
+                                    <Button className=" bg-warning  ml-3" onClick={this.toggleModal}>Login  <span className=" fa fa-sign-in fa-lg"></span></Button>
                                     }
 
                                 </NavLink>
@@ -152,7 +162,7 @@ class Header extends Component{
                                     Remember me
                                 </Label>
                             </FormGroup>
-                            <Button type="submit" value="submit" className="btn btn-success">Login</Button>
+                            <Button type="submit" value="submit" className="btn btn-success m-2">Login</Button>
                         </Form>
                         <h4>dont't have an account? </h4>
                         <Oauth /> 

@@ -143,7 +143,7 @@ router.post('/login',cors.corsWithOptions,passport.authenticate('local'),(req,re
   var token=authenticate.getToken({_id:req.user._id}) // if you choose you can also include other user's information
   res.statusCode=200;
   res.setHeader('Content-Type','application/json');
-  res.json({status:'Login successful ',success:true,token:token})
+  res.json({status:'Login successful ',success:true,token:token,userId:req.user._id})
 })
 router.route('/login')
 .all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
@@ -214,10 +214,26 @@ router.route('/:userId')
     return next(err)
   }
 })
+router.route('/:userId')
+.put(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
+  if(authenticate.verifyAdminBoolean){
+    Users.findByIdAndUpdate(req.params.userId,{$set:req.body},{new:true})
+    .then(user=>{
+      res.statusCode=200;
+      res.setHeader('Content-Type','application/json');
+      res.json(user)
+    })
+  }
+  else{
+    let err=new Error('I guess u are not authorized enough to pull out this request. Only Admins can do this. '+'(username: '+req.user.username+')'+req.user)
+    err.status=403;
+    return next(err)
+  }
+})
 .all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
   res.statusCode=403;
   res.setHeader('Content-Type','application/json');
-  res.json({err:"Not available mate"})
+  res.json("Not available mate")
 })
 
  

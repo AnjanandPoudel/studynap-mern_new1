@@ -132,18 +132,26 @@ function Home(props){
 
 <div className="container-fluid pt-5 bg-course">
     <div className="m-3 moto">
-        <h4>Lorem, ipsum dolor.</h4>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto minus accusantia mollitia maxime quasi reprehenderit obcaecati eum.</p>
-    </div>
+        <h4 className="abel">A small step to achieve a great feat.</h4>
+        <p className="">  My day started little late today about half past 6. It was raining when I woke up, I washed 
+my face and came to my room.   </p>
+             </div>
     <div className="row">
         <div className="bg-course col-9 ">
-          <h5 className="bold">Course Packages:</h5>
-          <hr className="homehr"/>
+          <h5 className="bold mt-5 m-2">Course Packages:</h5>
+          <hr className="light"/>
             <RenderHomeCourse Loading_courses={props.Loading_courses} errmsg={props.errmsg} courses={props.courses} />
         </div>
         <div className="sidebar p-3 col-3 ">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur fugiat libero necessitatibus esse, optio porro velit dicta voluptas sed dolores!
-        </div>
+       Then after mom came to the shop I started doing little exercises , did pushups then plank , increasing it by 10 secs.
+Then I made my room . 
+<br />   
+<br />
+<span>Then I played the cats game in my mobile for some time. Then after that I went to the shop for looking after and selling 
+things as Dad went to the office .</span> 
+
+  </div>
+<p></p>
     </div>
 </div> 
     </div>

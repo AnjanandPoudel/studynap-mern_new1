@@ -15,17 +15,37 @@ const storage=multer.diskStorage({
         callback(null,req.user._id+'___'+createAt +'___'+file.originalname)
     }
 })
+const storageimg=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,'public/assets')
+    },
+
+    filename:(req,file,callback)=>{
+        callback(null,req.user._id+'___'+createAt +'___'+file.originalname)
+    }
+})
 
 //regular expression /.\('.....')$/
-const imageFiltering=(req,file,cb)=>{
-    if(!file.originalname.match(/\.(avi|mkv|gif|mp4)$/)){
+const videoFiltering=(req,file,cb)=>{
+    if(!file.originalname.match(/\.(avi|mkv|gif|mp4|m4v)$/)){
         cb(new Error('Please choose the image file only ((avi|mkv|gif|mp4)) extensions'),false)
     }
     else{
         cb(null,true)
     }
 }
-let upload = multer({storage:storage,fileFilter:imageFiltering});
+const imageFiltering=(req,file,cb)=>{
+    if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
+        cb(new Error('Please choose the image file only ((avi|mkv|gif|mp4)) extensions'),false)
+    }
+    else{
+        cb(null,true)
+    }
+}
+
+let upload = multer({storage:storage,fileFilter:videoFiltering});
+
+let uploadImage= multer({storage:storageimg,fileFilter:imageFiltering});
 
 let uploadRouter=express.Router();
 
@@ -50,6 +70,43 @@ uploadRouter.route('/')
     },err=>next(err))
     .catch(err=>next(err))
   
+})
+.all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
+    res.statusCode=401;
+    res.setHeader('Content-Type','application/json');
+    res.json({err:"Not available mate"})
+})
+
+
+
+uploadRouter.route('/:imageid')
+.options(cors.corsWithOptions,(req,res,next)=>res.sendStatus(200))
+.put(cors.corsWithOptions,authenticate.verifyUser,uploadImage.single('selectedfile'),(req,res,next)=>{
+    console.log(req.body)
+    req.body.image='assets/'+req.file.filename
+    console.log(req.body)
+    console.log(req.params.imageid)
+
+    CourseModel.findById(req.params.imageid)
+    .then(course=>{
+        if(req.user._id.equals(course.author)){
+            CourseModel.findByIdAndUpdate(req.params.imageid,{$set:req.body},{new:true})
+          .then(info=>{
+            res.statusCode=200;
+            res.setHeader('Content-Type','application/json');
+            res.json(info);
+          },err=>next(err))
+          .catch(err=>next(err))
+        }
+        else{
+            res.status(401).send('You may be the wrong user for this action, user authentication failed');
+
+        }
+    })
+    .catch(err=>{
+        res.status(401).send("erro");
+
+    })
 })
 .all(cors.corsWithOptions,authenticate.verifyUser,(req,res,next)=>{
     res.statusCode=401;

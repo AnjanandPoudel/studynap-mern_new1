@@ -1,35 +1,7 @@
-.abel{
-   font-family: 'Abel', sans-serif ;
-}
-p{
-    font-family: 'Abel', sans-serif ;
-    color: black;
-}
 
-.hel{
-    font-family: Arial, Helvetica, sans-serif
-}
-
-img{
-    width: 100%;
-}
-
-a{
-    text-decoration: none !important;
-}
-.smalltext{
-    font-size: 14px;
-}
-.medtext{
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.yellow{
-    color: rgb(220, 154, 11) !important;
-}
-.blue{
-    color: blue;
+body{
+    background-image: url(../images/a.jpg);
+  
 }
 
 .boxy{
@@ -54,20 +26,37 @@ i:hover{
 }
 
 
-
-
-
-
-
-
-
+/* header section */
 
 
 .navbar{
-    min-height: 5rem;
+    min-height: 4.2rem;
     max-height: 30rem;
+    padding: 0rem 1rem !important;
+    background: rgb(56, 55, 55) !important;
 }
 
+.smalluserimage{
+    margin-top: 0.3rem;
+    margin-bottom: -0.3rem;
+    width: 3vw;
+    border-radius: 50%;
+    overflow: hidden;
+    height: 3vw;
+}
+.smalluserimage img{
+    height: 3vw;
+}
+
+.navbar i{
+    font-size: 1.3rem;
+    margin: 0 1rem;
+    color: rgb(235, 234, 234);
+}
+.navbar .btn{
+    font-size: 12px;
+    margin-top: 0.4rem;
+}
 
 /* searh box start */
 
@@ -80,32 +69,58 @@ i:hover{
     left: 50%;
     transform: translate(-50%);
     width: 100%;
+    margin: -2rem 0 0rem 0;
+    outline: none !important;
 }
 
  .search-box input{
-    padding: 0.5rem;
-    border-radius:0.4rem ;
-    border:1px solid black;
+    padding: 0.4rem;
+    border:1px solid rgb(170, 170, 170);
     outline: none;
-    color: black;
-    font-family: "Abel";
-    margin: 0.5rem;
-    width:50%;
+    color: rgb(0, 0, 0);
+    font-family: sans-serif;
+    width:30%;
+    background: rgb(228, 228, 228);
+    margin-top: -2px;
+
 }
 
 .search-box button{
     
-        padding: 0.rem 2rem;
-        border-radius: 1rem;
-        background: rgb(163, 105, 163);
+        padding: 0.4rem 0.8rem ;
+        background: rgb(141, 33, 141);
         color: black;
-        font-size: 1.2rem;
+        font-size: 1rem;
         cursor: pointer;
-        border: 1px solid transparent;
-        outline: none;
-        margin: 1rem;
-        transform: translate(-6%);
+        border: 1px solid rgb(110, 109, 109);
+        color: white;
+        text-align: center;
+        margin-top: -2px;
+        border-radius: 0;
+
     }
+    
+
+.add-course-btn{
+    background: rgb(209, 203, 203);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 5px;
+    font-size: 1.5rem;
+    color: rgb(61, 17, 17);
+    margin: -1.5rem 0 0 4rem;
+}
+
+.add-course{
+    margin: 0 0 0 4rem;
+}
+#add-course-a{
+    transition:  ease-in-out;
+    transition-duration: 1s;
+    animation-duration: 1s;
+}
 
 
 
@@ -113,12 +128,17 @@ i:hover{
 /* search box ends */
 
 .bg-course{
-    margin: 3rem 0;
+    margin: 1rem 0rem 0 0;
+    padding: 0 5rem;
+}
+
+.cardsInCourse{
+    margin-top: 0;
 }
 
 .cardCourse{
     color: #000;
-    width: 300;
+    width: 280px;
     max-height: 380px;
     overflow-y: hidden;
 
@@ -137,8 +157,31 @@ i:hover{
 
 .cardCourse .homeimage{
     width: 290px;
-    min-height: 185px;
+    min-height: 170px;
     max-height: 195px;
+
+}
+.cardCourse .coursetitle{
+    white-space: nowrap;
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.homeimagediv {
+    height: 175px;
+    overflow: hidden;
+}
+
+.description-part{
+    width: 90%;
+    text-overflow: ellipsis; 
+}
+.description-part .descp-only{
+    white-space: nowrap;
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -147,6 +190,7 @@ i:hover{
     height: 290px;
     background: rgb(243, 243, 243);
     text-align: center;
+
 }
 
 .addcard p{
@@ -155,21 +199,65 @@ i:hover{
     color: rgb(75, 182, 42);
 }
 
+.coursetitle{
+    margin: 0;
+}
+
+
+/* comment section start */
+.comment_username{
+    background: rgb(110, 98, 122);
+    border-radius: 0.3rem;
+    color: rgb(255, 255, 255);
+    padding: 0.2rem 0.4rem;
+    
+}
+.user_comment{
+    background: rgb(196, 190, 196);
+    border-radius: 0.3rem;
+    padding: 0.5rem ;
+}
+/* comment section end */
 
 
 
 
 
+/* course users roung */
+.cardContents .smalluserimage{
+    margin-top: 0rem;
+    margin-bottom: 0.3rem;
+    width: 3vw;
+    border-radius: 50%;
+    overflow: hidden;
+    height: 3vw;
+}
+.cardContents .smalluserimage img{
+    height: 3vw;
+    margin-top: -2.2rem;
+
+}
 
 
-
-
+/* video card courses */
+.thumbnailimage{
+    display: inline-block;
+    background: rgb(204, 193, 218);
+    width:4.5vw;
+    padding:0.1rem;
+    border-radius: 0.2rem;
+    
+}
+.thumbnailimage img{
+    max-height: 3rem;
+    
+}
 
 
 @media (min-width: 768px){
 .cardsInCourse {
     flex: 0 0 22%;
-    margin:0 0 1rem 1rem;
+    margin:0 0 0.5rem 0.5rem;
     /* max-width: 25%; */
 }
 
