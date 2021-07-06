@@ -1,5 +1,5 @@
 import { Link, Router } from "react-router-dom"
-import {Form} from 'reactstrap'
+import {Form,Alert} from 'reactstrap'
 import React, {Component} from 'react';
 
 
@@ -86,9 +86,14 @@ class Contactmain extends Component{
        this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.descp)
        
      }
+
+     handleAlert=()=>{
+      
+     }
+
     render(){ 
     return(
-        <div className="App container mt-5">
+        <div className="App container mt-0">
         <form className="form" action="/courses" encType="multipart/form-data" onSubmit={(values)=>this.handleSubmit(values)} >
             <div className="form-group">
               <label className="control-label col-sm-2" htmlFor="name">Name:</label>
@@ -138,6 +143,9 @@ class Contactmain extends Component{
       
           <button  type="submit" className=" btn btn-success ">Submit</button>
         </form>
+        <Alert severity="success" className="alert" > Your data was successfully updated. <span role="button" onClick={this.handleAlert}>x</span> </Alert>
+      
+
       </div>
     );
     }

@@ -16,6 +16,7 @@ router.route('/')
         res.setHeader('Content-Type','application/json');
         res.json(comment)
     })
+    .catch(err=>next(err))
 })
 .post(cors.corsWithOptions,authenticate.verifyUser  ,(req,res,next)=>{
     if(req.user!==null){

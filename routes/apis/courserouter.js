@@ -27,8 +27,9 @@ router.route('/')
     },err=>next(err))
     .catch(err=>next(err))
 })
-/* .post(cors.corsWithOptions,authenticate.verifyUser ,(req,res,next)=>{
+.post(cors.corsWithOptions,authenticate.verifyUser ,(req,res,next)=>{
   req.body.author=req.user._id;
+  console.log(req.body)
   courseModels.create(req.body)
   .then((course)=>{
     courseModels.findById(course._id)
@@ -41,7 +42,7 @@ router.route('/')
     .catch(err=>next(err))
   },err=>next(err))
   .catch(err=>next(err))
-}) */
+})
 
 /*
 .post(cors.cors,(req,res,next)=>{
@@ -116,6 +117,7 @@ router.route('/')
 
 
 router.route('/:id')
+.options(cors.corsWithOptions,(req,res)=>{res.sendStatus(200)})
 .get(cors.corsWithOptions,(req,res,next)=>{
     courseModels.findById(req.params.id)
     .populate('author')
@@ -185,7 +187,7 @@ router.route('/:id')
     else{
       res.statusCode=401;
       res.setHeader('Content-Type','application/json')
-      res.json({err:"Hello babe you are not the right user , "+req.user.username})
+      res.send("Hello babe you are not the right user ")
       
     }
   })

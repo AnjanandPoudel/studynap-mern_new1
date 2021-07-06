@@ -1,9 +1,11 @@
-import { Component } from "react"
-import { Link, } from "react-router-dom"
-import { Modal, ModalBody, ModalHeader,UncontrolledDropdown,DropdownMenu,DropdownItem,DropdownToggle } from 'reactstrap'
-import { baseurl, dataurl } from "../redux/baseURL"
-import { Loading } from "./Loading"
-import axios from 'axios'
+import { Component } from "react";
+import { Link, } from "react-router-dom";
+import { Modal, ModalBody, ModalHeader,UncontrolledDropdown,DropdownMenu,DropdownItem,DropdownToggle,NavItem } from 'reactstrap';
+import { baseurl, dataurl } from "../redux/baseURL";
+import { Loading } from "./Loading";
+import SearchComponent from "../composmall/searchbox"
+import axios from 'axios';
+import PopularPosts from "../composmall/popularposts";
 
 /* {
     id: 0,
@@ -27,16 +29,7 @@ class Courses extends Component{
         }
     }
 
-
-  
-
-    
-   
-    
-    render(){
-     
-
-        
+    render(){        
         if(this.props.Loading_courses){
            return(
                <div className="">
@@ -69,7 +62,7 @@ class Courses extends Component{
             let  menu=this.props.courses.map(course=>{
                 return(
                   <div    /*  onClick={()=>this.props.onClick(course.id)} */   className="cardsInCourse" key={course._id}>
-                        <RenderCourse course={course}/>
+                        <RenderCourse course={course} userinformation={this.props.users} />
                   </div>
                 )
              })
@@ -79,34 +72,22 @@ class Courses extends Component{
                             <div className="row">
                                 <div className="bg-course col-12 ">
                                     <div className="">
+                                    <a href="#add-course" id="add-course-a">
+                                    <div  className="add-course-btn">
+                                            <i className="fa fa-arrow-down"></i>
+                                        </div>
+                                    </a>
+                                        <span  className="add-course smalltext">add courses</span>
+
                                         <SearchComponent />
+                                       
                                     </div>
-                                    <div className="d-flex flex-wrap">
+                                    
+                                    <div className="d-flex flex-wrap pl-4 pr-3 ">
                                         <div className="cards d-flex flex-wrap col-9">
                                             {menu}
                                         </div>
-                                        <div className="popular-posts col-md-3">
-                                            <h5>POPULAR POSTS:</h5>
-                                            <div className="">
-                                                <img src="images/q.jpg" alt=""/>
-                                                <div className="popularimagebelow">
-                                                    <span className="d-flex">
-                                                        <i className="fa fa-like"></i>
-                                                        <i className="fa fa-like"></i>
-
-
-
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <p className="abel">
-                                                This is something that i dearmed of :
-                                                <br/>
-                                                <span className="smalltext">
-                                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, porro?
-                                                </span>
-                                            </p>
-                                        </div>
+                                        <PopularPosts />
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +95,6 @@ class Courses extends Component{
                         <div className="col-10 col-sm-6 col-md-4 col-lg-3 addcard">
                             <AddCourse add_courses={this.props.add_courses} />
                         </div>
-        
                 </div>
                 )
         }
@@ -122,68 +102,57 @@ class Courses extends Component{
             return(
                 <div className="">null </div>
             )
-        }
-       
-    }
-    
-}
-
-class SearchComponent extends Component {
-    constructor(){
-        super()
-        this.state={
-
-        }
-    }
-
-    render(){
-        return(
-            <div className="search-box">
-                <input type="text"  placeholder="Search by id/name" name="Search" />
-                <button className="btn button" type="submit">Search</button>
-            </div>
-        )
+        }  
     }
 }
+
 
 
 class RenderCourse extends Component {
     render(){
+        let user = this.props.userinformation.users.filter(user=>user._id ===this.props.course.author._id )[0]
+/*         console.log(this.props.course.author._id)
+ */
         if(this.props.course){
             console.log(this.props.course);
             return(
-                <div  className=" m-1 cardCourse">
+                
+                <div  className=" m-1 mt-5 cardCourse">
+                        <hr className="light" />
                     <div className="homeimagediv">
                         <div className="d-flex justify-content-between">
-                            <div className="">
-                                
+                            <div className=""> 
                             </div>  
                         </div>
                         <Link to={`/courses/${this.props.course._id}`} >
                             <img  controlsList="nodownload" className="homeimage"  src={baseurl+this.props.course.image} alt="pic"/>
                         </Link>
-                       
                     </div>
-    
-                    
-                    <div className="cardContents d-flex justify-content-between">
-                    <p className="ml-1 bold">{this.props.course.name?this.props.course.name:'lore kjndfkja kj afkj afkj akjf  Ap'}</p>      
-                    <br/>
+                    <div className=" p-1 cardContents d-flex justify-content-between">
                      <span className="smalltext abel">{this.props.course.Likes} <i className="fa fa-eye  "></i> </span>
                        <span className="stars smalltext">{this.props.course.Rate} <i className="fa fa-star yellow"></i> </span>
                        <span className=" smalltext">Grade: {this.props.course.grade}  </span>
-    
-                        
                     </div>
-                    <div className="p-2 cardContents d-flex justify-content-between">
-                       <div className="">
-                        <p className="smalltext"> {this.props.course.description} Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloribus, nihil. </p>
+                    <p className="ml-1 coursetitle smalltext bold">{this.props.course.name?this.props.course.name: <span className="red">Please write a title</span> }</p>      
+
+                    <div className=" p-1 cardContents d-flex justify-content-between">
+                       <div className="description-part ">
+                        <div className="smalltext descp-only hel"> {this.props.course.description} </div>
                         <div className="d-flex justify-content-between">
-                            <p className=" smalltext "> Subject:{this.props.course.subject}</p>
-                          
-                            
+                            <span className=" smalltext hel "> Subject:{this.props.course.subject}</span>
                         </div>
                        </div>
+                        <NavItem className=" smalluserimage p-0"> 
+                              {user 
+                              ?
+                               <Link to="/user" className="">
+                                  <img className="userimage " src={baseurl+user.image} alt="pp"/>
+                              </Link>
+                              :
+                              <div className=""></div> }
+                            </NavItem>
+
+                        
                     </div>
                    
                 </div>
@@ -197,10 +166,7 @@ class RenderCourse extends Component {
     }
 }
 
-
-
 class AddCourse extends Component{
-
     constructor(props){
        super()
        this.state={
@@ -210,12 +176,10 @@ class AddCourse extends Component{
          subject:'',
          description:'',
          modelopen:false
-   
        }
        this.handleChange=this.handleChange.bind(this);
        this.handleChangeinput=this.handleChangeinput.bind(this);
      }
-   
      handleChange(event){
        this.setState({
          selectedfile:event.target.files[0]
@@ -229,15 +193,12 @@ class AddCourse extends Component{
        this.setState({
          [name]:value
        })
-  
      }
-
      handletoggle=()=>{
         this.setState({
             modelopen:!this.state.modelopen
         })
     }
-
 
     handleSubmitRedux = (event) => {
         event.preventDefault();
@@ -248,9 +209,7 @@ class AddCourse extends Component{
         filename=createdat+'___'+filename
         console.log(filename)
         this.props.add_courses(this.state.name,this.state.email,this.state.subject,this.state.description,this.state.selectedfile);
-        
     }
-
 
     handleSubmit = (event) => {
         event.preventDefault();
@@ -297,14 +256,12 @@ class AddCourse extends Component{
         })
          */
     }
-  
-     
      render(){
        return (
          <div className=" mt-5">
              <button onClick={this.handletoggle} className="btn col-12" > 
                 <div className="">
-                <h3> Add Course</h3>
+                <h3 id="add-course"> Add Course </h3>
                     <p>+</p>
                 </div>
             </button>
@@ -341,13 +298,14 @@ class AddCourse extends Component{
                         </div>
             
                         <div className="form-group card m-3 p-2">
-                            <label className="control-label col-sm-12" htmlFor="name">Choose a file</label>
+                            <label className="control-label col-sm-12 bold italic" htmlFor="name">Choose a Video (mp4/mkv/m4v/avi/gif)</label>
                             <div className="col-sm-10">
                             <input type="file" name="videoname" className="col-12 btn btn-warning" onChange={this.handleChange} />
                             </div>
                         </div>
                     
                         <button  type="submit" className=" btn btn-success ">Submit</button>
+                        <div className="note bold smalltext"> You can Update/Add thumbnail later </div>
                         </form>
                 </ModalBody>
             </Modal>

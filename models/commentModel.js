@@ -26,6 +26,10 @@ const commentSchema=new Schema({
     course:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'courseModel'
+    },
+    Likes:{
+        type:String,
+        default:0,
     }
 },{timestamps:true}
 )

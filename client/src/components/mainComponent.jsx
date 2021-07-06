@@ -1,17 +1,16 @@
-import React,{Component} from 'react'
-import Header from './headerComponent'
+import React,{Component} from 'react';
+import Header from './headerComponent';
 import Home from './homeComponent';
 import Courses from './courseComponents';
-import Footer from './footerComponent'
-import {Redirect,Route, Switch,withRouter} from 'react-router-dom'
+import Footer from './footerComponent';
+import {Redirect,Route, Switch,withRouter} from 'react-router-dom';
 import AddCourse from './addCourseComponent';
 import Contact from './contactComponent';
-import UserPage from './userpage'
-
+import UserPage from './userpage';
 import CourseDetail from './courseDetailComponent';
-
 import {connect} from 'react-redux';
-import {postComments,postCourses,fetchCourses,fetchcomments,loginUser,logoutUser,fetchUser } from '../redux/ActionCreators';
+import {postComments,postCourses,fetchCourses,fetchcomments,loginUser,logoutUser,fetchUser,putUserInfo,putCourses,putCourseThumbnail,deleteCourse,deleteComment } from '../redux/ActionCreators';
+
 
 
 const mapStatetoProps= state=>{
@@ -34,7 +33,13 @@ const mapDispatchtoProps=(dispatchIt)=>({
   fetchcomments:()=>{dispatchIt(fetchcomments())},
   fetchUser:()=>{dispatchIt(fetchUser())},
   logoutUser:()=>{dispatchIt(logoutUser())},
-  loginUser:(creds)=>{dispatchIt(loginUser(creds))}
+  loginUser:(creds)=>{dispatchIt(loginUser(creds))},
+  putUserInfo:(data)=>{dispatchIt(putUserInfo(data))},
+  putCourses:(data,updateId)=>{dispatchIt(putCourses(data,updateId))},
+  putCourseThumbnail:(data,updateId)=>{dispatchIt(putCourseThumbnail(data,updateId))},
+  deleteCourse:(id)=>{dispatchIt(deleteCourse(id))},
+  deleteComment:(id)=>{dispatchIt(deleteComment(id))},
+
 })
 
 
@@ -44,7 +49,6 @@ class Main extends Component{
         this.state={
         }
       }
-
 /*       
     onCourseClick(itemId){
       this.setState({selectedCourseId:itemId})
@@ -58,11 +62,10 @@ class Main extends Component{
     
       render() {
         console.log(this.props.courses)
-
         const HomePage=()=>{
           return(
             <Home  courses={this.props.courses.courses}
-             Loading_courses={this.props.courses.isLoading}
+              Loading_courses={this.props.courses.isLoading}
               errmsg={this.props.courses.errmsg} />
           )
         }
@@ -92,6 +95,11 @@ class Main extends Component{
                           errmsg={this.props.courses.errmsg}
                           loading_comments={this.props.comments.loading_comments} 
                           failed_comments={this.props.comments.failed_comments}
+                          putCourses={this.props.putCourses}
+                          putCourseThumbnail={this.props.putCourseThumbnail}
+                          deleteCourse={this.props.deleteCourse}
+                          deleteComment={this.props.deleteComment}
+
           />
           )
         }
@@ -103,9 +111,10 @@ class Main extends Component{
                 comments={this.props.comments.filter(item=> item.id === this.state.selectedCourseId )[0]}
               /> */}
               <Courses courses={this.props.courses.courses} 
-              add_courses={this.props.props_addCourses}
-              Loading_courses={this.props.courses.isLoading}
-              errmsg={this.props.courses.errmsg}
+                add_courses={this.props.props_addCourses}
+                Loading_courses={this.props.courses.isLoading}
+                errmsg={this.props.courses.errmsg}
+                users={this.props.users}
               /* onClick={(courseId)=>this.onCourseClick(courseId)} */ />
             </div>
           )
@@ -118,7 +127,8 @@ class Main extends Component{
               
                 {this.props.auth.is_auth?
                   <UserPage image="/images/concert.jpg" auth={this.props.auth} likes={'liked videos'} uservideos={''} 
-                  userinformation={this.props.users.users.filter(item=>item.username===this.props.auth.userinfo.username)[0]}  />
+                  userinformation={this.props.users.users.filter(item=>item.username===this.props.auth.userinfo.username)[0]}
+                  putUserInfo={this.props.putUserInfo}   />
                   :
                   <UserPage image="/images/q.jpg" auth={this.props.auth} likes={'liked videos'} uservideos={''} userinformation={''}  />
               }
@@ -130,7 +140,7 @@ class Main extends Component{
           console.log(this.props)
           return(
             <div className="">
-              <UserPage image="/images/q.jpg" auth={this.props.auth} likes={'liked videos'} uservideos={''} userinformation={this.props.users}   />
+              <UserPage auth={this.props.auth} likes={'liked videos'} uservideos={''} userinformation={this.props.users}   />
             </div>
           )
         }
@@ -140,7 +150,8 @@ class Main extends Component{
         return (
         
           <div className="">
-           <Header  loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} auth={this.props.auth} />
+           <Header  loginUser={this.props.loginUser} logoutUser={this.props.logoutUser} auth={this.props.auth} 
+            userinformation={this.props.users.users.filter(item=>item.username===this.props.auth.userinfo.username)[0]} />
           
             <Switch>
               <Route path="/home" component={HomePage} />

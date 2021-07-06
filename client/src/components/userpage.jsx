@@ -1,5 +1,5 @@
-import { Link, Router } from "react-router-dom"
-import {Button, Form, Input, Modal, ModalBody, ModalHeader,Label,Row,Col, NavLink} from 'reactstrap'
+import { Link, Router } from "react-router-dom";
+import {Button, Form, Input, Modal, ModalBody, ModalHeader,Label,Row,Col, NavLink} from 'reactstrap';
 import React, {Component} from 'react';
 import { baseurl } from "../redux/baseURL";
 import {Control, LocalForm} from 'react-redux-form'
@@ -9,17 +9,25 @@ function RenderUser(props){
    if(props.userinformation){
     return(
         <div className=" mid mt-2 abel">
+            
             <span>Contact email : {props.userinformation.email} </span><br/>
             <span>Address: {props.userinformation.address} </span><br/>
             <span>Studying, {props.userinformation.Education} </span><br/>
             <span>From, {props.userinformation.EducationPlace} </span><br/>
             <span>{props.userinformation.academicDetail} </span><br/>
+            
         </div>
     )
    }
    else{
        return(
-           <div className=""></div>
+           <div className="">
+                <span>Contact email : N/A   </span><br/>
+                <span>Address: N/A </span><br/>
+                <span>Studying,  N/A  </span><br/>
+                <span>From, N/A  </span><br/>
+                <span> </span><br/>
+           </div>
        )
    }
 }
@@ -35,15 +43,20 @@ function UserPage(props){
                 <div className="row m-2">
                     
                     <div className="row col-md-9">
+                    {props.userinformation ?
                         <div className="userimageround  ">
-                            <img className="userimage" src={props.image} alt=""/>
+                            <img className="userimage" src={baseurl+props.userinformation.image} alt="pp"/>
                         </div>
-                        
+                        :
+                        <div className="userimageround  ">
+                            <img className="userimage" src="images/q.jpg" alt=""/>
+                        </div>
+                    }
                         {props.auth.userinfo ?
                         <div className="userinfo col-7 p-0"> 
                             <h5 className="abel mt-5 d-flex flex-wrap justify-content-between">
                                 <span>{props.auth.userinfo.username}</span>
-                                <UserEditButton  userinformation={props.userinformation}  />
+                                <UserEditButton  userinformation={props.userinformation} putUserInfo={props.putUserInfo}  />
                             </h5>
                             <hr/>
 
@@ -198,7 +211,17 @@ class UserEditButton extends Component{
     }
     handleSubmit=(values)=>{
         this.handleClick()
-        alert(JSON.stringify(values))
+       
+        if(this.props.userinformation)
+        {
+            this.props.putUserInfo({_id:this.props.userinformation._id,
+                Education:values.edu,
+                Education_place:values.edu_place,
+                description:values.edu_descp
+                ,email:values.email   
+            })
+        }
+        
         
     }
 
@@ -212,8 +235,6 @@ class UserEditButton extends Component{
    
       }
 
-
-
     render(){
         return(
             <div className="">
@@ -226,12 +247,6 @@ class UserEditButton extends Component{
                     <ModalBody>
                         <LocalForm onSubmit={(values)=>this.handleSubmit(values)}className="form p-2" >
                             
-                            <div className="form-group row">
-                                <Label htmlFor="username" md={2}>Username</Label>
-                                <Col  md={10}>
-                                    <Control.text name="username" model=".username"className="form-control" placeholder={this.props.userinformation?this.props.userinformation.username:"username"} />
-                                </Col>
-                            </div>
                             <div className="form-group row">
                                 <Label htmlFor="email" md={2}>Email</Label>
                                 <Col  md={10}>
@@ -257,9 +272,12 @@ class UserEditButton extends Component{
                                 </Col>
                             </div>
                             
-                            <Button className="btn btn-success text-center" >Submit</Button>
+                            <Button className="btn btn-success text-center " >Submit</Button>
                             <br/><hr/>
-                                <Link to={'/courses'} className="btn btn-primary"> Edit the images(profile pics) </Link>
+                               <div className="na p-2">
+                               <Link to={'/courses'} className="btn btn-warning"> Edit the images(profile pics) </Link> <hr />
+                                <Link to={'/courses'} className="btn btn-warning"> Edit the UserName </Link>
+                               </div>
                         </LocalForm>
                     </ModalBody>
                 </Modal>
