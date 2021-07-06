@@ -40,7 +40,7 @@ let CourseModel=new mongoose.Schema({
     },
     video:{
         type:String,
-        default:''
+        default:'videos/a.mp4'
     },
     grade:{
         type:String,
